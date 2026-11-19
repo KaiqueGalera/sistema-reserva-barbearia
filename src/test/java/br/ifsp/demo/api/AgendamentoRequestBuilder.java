@@ -50,6 +50,11 @@ public class AgendamentoRequestBuilder {
         return this;
     }
 
+    public AgendamentoRequestBuilder semInicio() {
+        this.inicio = null;
+        return this;
+    }
+
     public AgendamentoRequestBuilder semServicos() {
         this.servicos = null;
         return this;
