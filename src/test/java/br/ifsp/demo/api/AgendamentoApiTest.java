@@ -80,4 +80,15 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("itens[0].nomeDoServico", equalTo("Corte"))
                 .body("avaliacao", nullValue());
     }
+
+    @Test
+    @DisplayName("Deve retornar 401 ao agendar sem token")
+    void deveRetornar401AoAgendarSemToken() {
+        requisicao()
+                .body(umAgendamento().construir())
+                .when()
+                .post("/api/v1/agendamentos")
+                .then()
+                .statusCode(401);
+    }
 }
