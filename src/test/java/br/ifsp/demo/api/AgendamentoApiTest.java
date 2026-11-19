@@ -125,4 +125,19 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("status", equalTo("BAD_REQUEST"))
                 .body("message", notNullValue());
     }
+
+    @Test
+    @DisplayName("Deve retornar 400 ao agendar com JSON malformado")
+    void deveRetornar400AoAgendarComJsonMalformado() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+
+        requisicaoAutenticada(token)
+                .body("{ \"barbeiroId\": ")
+                .when()
+                .post("/api/v1/agendamentos")
+                .then()
+                .statusCode(400);
+    }
 }
