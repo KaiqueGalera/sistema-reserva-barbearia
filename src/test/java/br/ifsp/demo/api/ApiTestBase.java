@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 
@@ -33,6 +34,9 @@ public abstract class ApiTestBase {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JdbcTemplate jdbc;
+
     @BeforeEach
     void configurarRestAssured() {
         RestAssured.baseURI = "http://localhost";
@@ -42,6 +46,8 @@ public abstract class ApiTestBase {
 
     @AfterEach
     void limparBanco() {
+        jdbc.update("DELETE FROM item_de_servico");
+        jdbc.update("DELETE FROM agendamento");
         userRepository.deleteAll();
     }
 
