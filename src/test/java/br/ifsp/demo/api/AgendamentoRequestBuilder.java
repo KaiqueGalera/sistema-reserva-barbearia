@@ -50,6 +50,11 @@ public class AgendamentoRequestBuilder {
         return this;
     }
 
+    public AgendamentoRequestBuilder semServicos() {
+        this.servicos = null;
+        return this;
+    }
+
     public Map<String, Object> construir() {
         Map<String, Object> corpo = new HashMap<>();
         corpo.put("barbeiroId", barbeiroId);
