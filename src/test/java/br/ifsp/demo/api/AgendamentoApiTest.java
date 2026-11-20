@@ -157,4 +157,21 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("status", equalTo("NOT_FOUND"))
                 .body("message", notNullValue());
     }
+
+    @Test
+    @DisplayName("Deve retornar 422 ao agendar com a lista de serviços vazia")
+    void deveRetornar422AoAgendarComAListaDeServicosVazia() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+
+        requisicaoAutenticada(token)
+                .body(umAgendamento().comServicos().construir())
+                .when()
+                .post("/api/v1/agendamentos")
+                .then()
+                .statusCode(422)
+                .body("status", equalTo("UNPROCESSABLE_ENTITY"))
+                .body("message", equalTo("O agendamento deve conter ao menos um serviço"));
+    }
 }
