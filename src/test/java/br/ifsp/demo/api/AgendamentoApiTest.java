@@ -209,4 +209,30 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("status", equalTo("UNPROCESSABLE_ENTITY"))
                 .body("message", equalTo("O periodo deve estar dentro do horario de funcionamento"));
     }
+
+    @Test
+    @DisplayName("Deve retornar 409 ao agendar em um horário já ocupado pelo barbeiro")
+    void deveRetornar409AoAgendarEmUmHorarioJaOcupadoPeloBarbeiro() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final UUID barbeiroId = UUID.randomUUID();
+        final var agendamento = umAgendamento().comBarbeiro(barbeiroId).comInicio(amanhaAs(10)).construir();
+
+        requisicaoAutenticada(token)
+                .body(agendamento)
+                .when()
+                .post("/api/v1/agendamentos")
+                .then()
+                .statusCode(201);
+
+        requisicaoAutenticada(token)
+                .body(agendamento)
+                .when()
+                .post("/api/v1/agendamentos")
+                .then()
+                .statusCode(409)
+                .body("status", equalTo("CONFLICT"))
+                .body("message", equalTo("Horário indisponível para o barbeiro"));
+    }
 }
