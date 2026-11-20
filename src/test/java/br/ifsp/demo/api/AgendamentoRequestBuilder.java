@@ -25,6 +25,10 @@ public class AgendamentoRequestBuilder {
         return LocalDateTime.now().plusDays(1).withHour(hora).withMinute(0).withSecond(0).withNano(0);
     }
 
+    public static LocalDateTime ontemAs(int hora) {
+        return amanhaAs(hora).minusDays(2);
+    }
+
     public static String formatar(LocalDateTime data) {
         return data.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }

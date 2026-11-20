@@ -10,6 +10,7 @@ import java.util.UUID;
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.SERVICO_CORTE;
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.amanhaAs;
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.formatar;
+import static br.ifsp.demo.api.AgendamentoRequestBuilder.ontemAs;
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.umAgendamento;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.empty;
@@ -173,5 +174,22 @@ class AgendamentoApiTest extends ApiTestBase {
                 .statusCode(422)
                 .body("status", equalTo("UNPROCESSABLE_ENTITY"))
                 .body("message", equalTo("O agendamento deve conter ao menos um serviço"));
+    }
+
+    @Test
+    @DisplayName("Deve retornar 422 ao agendar em horário passado")
+    void deveRetornar422AoAgendarEmHorarioPassado() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+
+        requisicaoAutenticada(token)
+                .body(umAgendamento().comInicio(ontemAs(10)).construir())
+                .when()
+                .post("/api/v1/agendamentos")
+                .then()
+                .statusCode(422)
+                .body("status", equalTo("UNPROCESSABLE_ENTITY"))
+                .body("message", equalTo("Não é possível agendar em horário passado"));
     }
 }
