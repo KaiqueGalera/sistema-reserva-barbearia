@@ -192,4 +192,21 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("status", equalTo("UNPROCESSABLE_ENTITY"))
                 .body("message", equalTo("Não é possível agendar em horário passado"));
     }
+
+    @Test
+    @DisplayName("Deve retornar 422 ao agendar fora do horário de funcionamento")
+    void deveRetornar422AoAgendarForaDoHorarioDeFuncionamento() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+
+        requisicaoAutenticada(token)
+                .body(umAgendamento().comInicio(amanhaAs(20)).construir())
+                .when()
+                .post("/api/v1/agendamentos")
+                .then()
+                .statusCode(422)
+                .body("status", equalTo("UNPROCESSABLE_ENTITY"))
+                .body("message", equalTo("O periodo deve estar dentro do horario de funcionamento"));
+    }
 }
