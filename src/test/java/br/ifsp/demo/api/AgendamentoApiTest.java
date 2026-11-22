@@ -296,10 +296,39 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("$", empty());
     }
 
-    private void agendar(String token, Map<String, Object> agendamento) {
+    @Test
+    @DisplayName("Deve listar apenas os agendamentos ativos quando futuros for verdadeiro")
+    void deveListarApenasOsAgendamentosAtivosQuandoFuturosForVerdadeiro() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+
+        final String idAtivo = agendar(token, umAgendamento().comInicio(amanhaAs(10)).construir());
+        final String idCancelado = agendar(token, umAgendamento().comInicio(amanhaAs(14)).construir());
+
         requisicaoAutenticada(token)
+                .when()
+                .post("/api/v1/agendamentos/{id}/cancelamento", idCancelado)
+                .then()
+                .statusCode(204);
+
+        requisicaoAutenticada(token)
+                .queryParam("futuros", true)
+                .when()
+                .get("/api/v1/agendamentos")
+                .then()
+                .statusCode(200)
+                .body("$", hasSize(1))
+                .body("[0].id", equalTo(idAtivo));
+    }
+
+    private String agendar(String token, Map<String, Object> agendamento) {
+        return requisicaoAutenticada(token)
                 .body(agendamento)
                 .when()
-                .post("/api/v1/agendamentos");
+                .post("/api/v1/agendamentos")
+                .then()
+                .extract()
+                .path("id");
     }
 }
