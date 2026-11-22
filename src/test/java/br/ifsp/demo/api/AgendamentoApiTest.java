@@ -235,4 +235,22 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("status", equalTo("CONFLICT"))
                 .body("message", equalTo("Horário indisponível para o barbeiro"));
     }
+
+    @Test
+    @DisplayName("Deve retornar 422 ao agendar sem a antecedência mínima")
+    void deveRetornar422AoAgendarSemAAntecedenciaMinima() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final LocalDateTime daquiA30Minutos = LocalDateTime.now().plusMinutes(30).withNano(0);
+
+        requisicaoAutenticada(token)
+                .body(umAgendamento().comInicio(daquiA30Minutos).construir())
+                .when()
+                .post("/api/v1/agendamentos")
+                .then()
+                .statusCode(422)
+                .body("status", equalTo("UNPROCESSABLE_ENTITY"))
+                .body("message", equalTo("Agendamento exige no mínimo 60 minutos de antecedência"));
+    }
 }
