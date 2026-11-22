@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.SERVICO_CORTE;
@@ -13,6 +14,7 @@ import static br.ifsp.demo.api.AgendamentoRequestBuilder.formatar;
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.ontemAs;
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.umAgendamento;
 import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -252,5 +254,33 @@ class AgendamentoApiTest extends ApiTestBase {
                 .statusCode(422)
                 .body("status", equalTo("UNPROCESSABLE_ENTITY"))
                 .body("message", equalTo("Agendamento exige no mínimo 60 minutos de antecedência"));
+    }
+
+    @Test
+    @DisplayName("Deve listar os agendamentos do cliente ordenados pelo início")
+    void deveListarOsAgendamentosDoClienteOrdenadosPeloInicio() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final LocalDateTime manha = amanhaAs(10);
+        final LocalDateTime tarde = amanhaAs(14);
+
+        agendar(token, umAgendamento().comInicio(tarde).construir());
+        agendar(token, umAgendamento().comInicio(manha).construir());
+
+        requisicaoAutenticada(token)
+                .when()
+                .get("/api/v1/agendamentos")
+                .then()
+                .statusCode(200)
+                .body("$", hasSize(2))
+                .body("inicio", contains(formatar(manha), formatar(tarde)));
+    }
+
+    private void agendar(String token, Map<String, Object> agendamento) {
+        requisicaoAutenticada(token)
+                .body(agendamento)
+                .when()
+                .post("/api/v1/agendamentos");
     }
 }
