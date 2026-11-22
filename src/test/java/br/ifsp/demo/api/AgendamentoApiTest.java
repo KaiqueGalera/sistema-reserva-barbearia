@@ -544,6 +544,21 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("duracaoTotalEmMinutos", equalTo(30));
     }
 
+    @Test
+    @DisplayName("Deve retornar 404 ao remover um serviço inexistente do agendamento")
+    void deveRetornar404AoRemoverUmServicoInexistenteDoAgendamento() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().comServicos(SERVICO_CORTE, SERVICO_BARBA).construir());
+
+        requisicaoAutenticada(token)
+                .when()
+                .delete("/api/v1/agendamentos/{id}/itens/{itemId}", id, UUID.randomUUID())
+                .then()
+                .statusCode(404);
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
