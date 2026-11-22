@@ -495,6 +495,30 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", notNullValue());
     }
 
+    @Test
+    @DisplayName("Deve retornar 422 ao adicionar um serviço em um agendamento cancelado")
+    void deveRetornar422AoAdicionarUmServicoEmUmAgendamentoCancelado() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().construir());
+
+        requisicaoAutenticada(token)
+                .when()
+                .post("/api/v1/agendamentos/{id}/cancelamento", id)
+                .then()
+                .statusCode(204);
+
+        requisicaoAutenticada(token)
+                .body(Map.of("servicoId", SERVICO_BARBA))
+                .when()
+                .post("/api/v1/agendamentos/{id}/itens", id)
+                .then()
+                .statusCode(422)
+                .body("status", equalTo("UNPROCESSABLE_ENTITY"))
+                .body("message", equalTo("Apenas agendamentos ativos podem ser alterados"));
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
