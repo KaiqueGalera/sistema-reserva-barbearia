@@ -10,6 +10,7 @@ import java.util.UUID;
 public class AgendamentoRequestBuilder {
 
     public static final UUID SERVICO_CORTE = UUID.fromString("11111111-1111-1111-1111-111111111111");
+    public static final UUID SERVICO_BARBA = UUID.fromString("22222222-2222-2222-2222-222222222222");
 
     private UUID barbeiroId = UUID.randomUUID();
     private String nomeDoContato = "Kaique Galera";

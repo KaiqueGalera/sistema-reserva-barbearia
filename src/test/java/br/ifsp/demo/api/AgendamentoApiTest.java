@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
+import static br.ifsp.demo.api.AgendamentoRequestBuilder.SERVICO_BARBA;
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.SERVICO_CORTE;
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.amanhaAs;
 import static br.ifsp.demo.api.AgendamentoRequestBuilder.formatar;
@@ -453,6 +454,27 @@ class AgendamentoApiTest extends ApiTestBase {
                 .statusCode(422)
                 .body("status", equalTo("UNPROCESSABLE_ENTITY"))
                 .body("message", equalTo("Apenas agendamentos com status 'agendado' ou 'confirmado' podem ser cancelados"));
+    }
+
+    @Test
+    @DisplayName("Deve retornar 200 e o agendamento atualizado ao adicionar um serviço")
+    void deveRetornar200EOAgendamentoAtualizadoAoAdicionarUmServico() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().comServicos(SERVICO_CORTE).construir());
+
+        requisicaoAutenticada(token)
+                .body(Map.of("servicoId", SERVICO_BARBA))
+                .when()
+                .post("/api/v1/agendamentos/{id}/itens", id)
+                .then()
+                .statusCode(200)
+                .body("id", equalTo(id))
+                .body("itens", hasSize(2))
+                .body("itens[1].servicoId", equalTo(SERVICO_BARBA.toString()))
+                .body("valorTotal", comparesEqualTo(65.0f))
+                .body("duracaoTotalEmMinutos", equalTo(50));
     }
 
     private String agendar(String token, Map<String, Object> agendamento) {
