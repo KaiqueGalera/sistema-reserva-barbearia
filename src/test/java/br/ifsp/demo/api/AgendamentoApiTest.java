@@ -603,6 +603,23 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("quantidadeDeReagendamentos", equalTo(1));
     }
 
+    @Test
+    @DisplayName("Deve retornar 404 ao reagendar um agendamento inexistente")
+    void deveRetornar404AoReagendarUmAgendamentoInexistente() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+
+        requisicaoAutenticada(token)
+                .body(Map.of("novoInicio", formatar(amanhaAs(14))))
+                .when()
+                .post("/api/v1/agendamentos/{id}/reagendamento", UUID.randomUUID())
+                .then()
+                .statusCode(404)
+                .body("status", equalTo("NOT_FOUND"))
+                .body("message", notNullValue());
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
