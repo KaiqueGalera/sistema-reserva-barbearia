@@ -361,6 +361,25 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", notNullValue());
     }
 
+    @Test
+    @DisplayName("Deve retornar 404 ao buscar o agendamento de outro cliente")
+    void deveRetornar404AoBuscarOAgendamentoDeOutroCliente() {
+        final String senha = "senha123";
+        final User dono = registrarUsuario(senha);
+        final User outroCliente = registrarUsuario(senha);
+        final String tokenDoDono = autenticar(dono.getUsername(), senha);
+        final String tokenDoOutroCliente = autenticar(outroCliente.getUsername(), senha);
+        final String id = agendar(tokenDoDono, umAgendamento().construir());
+
+        requisicaoAutenticada(tokenDoOutroCliente)
+                .when()
+                .get("/api/v1/agendamentos/{id}", id)
+                .then()
+                .statusCode(404)
+                .body("status", equalTo("NOT_FOUND"))
+                .body("message", notNullValue());
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
