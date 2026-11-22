@@ -277,6 +277,25 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("inicio", contains(formatar(manha), formatar(tarde)));
     }
 
+    @Test
+    @DisplayName("Não deve listar os agendamentos de outro cliente")
+    void naoDeveListarOsAgendamentosDeOutroCliente() {
+        final String senha = "senha123";
+        final User dono = registrarUsuario(senha);
+        final User outroCliente = registrarUsuario(senha);
+        final String tokenDoDono = autenticar(dono.getUsername(), senha);
+        final String tokenDoOutroCliente = autenticar(outroCliente.getUsername(), senha);
+
+        agendar(tokenDoDono, umAgendamento().construir());
+
+        requisicaoAutenticada(tokenDoOutroCliente)
+                .when()
+                .get("/api/v1/agendamentos")
+                .then()
+                .statusCode(200)
+                .body("$", empty());
+    }
+
     private void agendar(String token, Map<String, Object> agendamento) {
         requisicaoAutenticada(token)
                 .body(agendamento)
