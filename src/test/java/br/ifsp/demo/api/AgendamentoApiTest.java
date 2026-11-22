@@ -380,6 +380,20 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", notNullValue());
     }
 
+    @Test
+    @DisplayName("Deve retornar 400 ao buscar um agendamento com id inválido")
+    void deveRetornar400AoBuscarUmAgendamentoComIdInvalido() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+
+        requisicaoAutenticada(token)
+                .when()
+                .get("/api/v1/agendamentos/{id}", "id-invalido")
+                .then()
+                .statusCode(400);
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
