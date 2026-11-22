@@ -477,6 +477,24 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("duracaoTotalEmMinutos", equalTo(50));
     }
 
+    @Test
+    @DisplayName("Deve retornar 404 ao adicionar um serviço fora do catálogo")
+    void deveRetornar404AoAdicionarUmServicoForaDoCatalogo() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().construir());
+
+        requisicaoAutenticada(token)
+                .body(Map.of("servicoId", UUID.randomUUID()))
+                .when()
+                .post("/api/v1/agendamentos/{id}/itens", id)
+                .then()
+                .statusCode(404)
+                .body("status", equalTo("NOT_FOUND"))
+                .body("message", notNullValue());
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
