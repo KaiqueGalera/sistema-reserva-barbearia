@@ -638,6 +638,22 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", equalTo("Nao e permitido agendar em horario passado"));
     }
 
+    @Test
+    @DisplayName("Deve retornar 404 ao confirmar presença em um agendamento inexistente")
+    void deveRetornar404AoConfirmarPresencaEmUmAgendamentoInexistente() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+
+        requisicaoAutenticada(token)
+                .when()
+                .post("/api/v1/agendamentos/{id}/confirmacao", UUID.randomUUID())
+                .then()
+                .statusCode(404)
+                .body("status", equalTo("NOT_FOUND"))
+                .body("message", notNullValue());
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
