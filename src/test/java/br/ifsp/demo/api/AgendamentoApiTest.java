@@ -620,6 +620,24 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", notNullValue());
     }
 
+    @Test
+    @DisplayName("Deve retornar 422 ao reagendar para um horário passado")
+    void deveRetornar422AoReagendarParaUmHorarioPassado() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().comInicio(amanhaAs(10)).construir());
+
+        requisicaoAutenticada(token)
+                .body(Map.of("novoInicio", formatar(ontemAs(10))))
+                .when()
+                .post("/api/v1/agendamentos/{id}/reagendamento", id)
+                .then()
+                .statusCode(422)
+                .body("status", equalTo("UNPROCESSABLE_ENTITY"))
+                .body("message", equalTo("Nao e permitido agendar em horario passado"));
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
