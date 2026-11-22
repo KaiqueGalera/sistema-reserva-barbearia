@@ -559,6 +559,29 @@ class AgendamentoApiTest extends ApiTestBase {
                 .statusCode(404);
     }
 
+    @Test
+    @DisplayName("Deve retornar 422 ao remover o único serviço do agendamento")
+    void deveRetornar422AoRemoverOUnicoServicoDoAgendamento() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().comServicos(SERVICO_CORTE).construir());
+        final String idDoCorte = requisicaoAutenticada(token)
+                .when()
+                .get("/api/v1/agendamentos/{id}", id)
+                .then()
+                .extract()
+                .path("itens[0].id");
+
+        requisicaoAutenticada(token)
+                .when()
+                .delete("/api/v1/agendamentos/{id}/itens/{itemId}", id, idDoCorte)
+                .then()
+                .statusCode(422)
+                .body("status", equalTo("UNPROCESSABLE_ENTITY"))
+                .body("message", equalTo("O agendamento deve conter ao menos um serviço"));
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
