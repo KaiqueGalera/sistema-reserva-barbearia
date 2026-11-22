@@ -416,6 +416,22 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("status", equalTo("CANCELADO"));
     }
 
+    @Test
+    @DisplayName("Deve retornar 404 ao cancelar um agendamento inexistente")
+    void deveRetornar404AoCancelarUmAgendamentoInexistente() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+
+        requisicaoAutenticada(token)
+                .when()
+                .post("/api/v1/agendamentos/{id}/cancelamento", UUID.randomUUID())
+                .then()
+                .statusCode(404)
+                .body("status", equalTo("NOT_FOUND"))
+                .body("message", notNullValue());
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
