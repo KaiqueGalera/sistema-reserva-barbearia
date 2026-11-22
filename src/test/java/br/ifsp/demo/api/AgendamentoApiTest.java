@@ -519,6 +519,31 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", equalTo("Apenas agendamentos ativos podem ser alterados"));
     }
 
+    @Test
+    @DisplayName("Deve retornar 200 e o agendamento atualizado ao remover um serviço")
+    void deveRetornar200EOAgendamentoAtualizadoAoRemoverUmServico() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().comServicos(SERVICO_CORTE, SERVICO_BARBA).construir());
+        final String idDaBarba = requisicaoAutenticada(token)
+                .when()
+                .get("/api/v1/agendamentos/{id}", id)
+                .then()
+                .extract()
+                .path("itens[1].id");
+
+        requisicaoAutenticada(token)
+                .when()
+                .delete("/api/v1/agendamentos/{id}/itens/{itemId}", id, idDaBarba)
+                .then()
+                .statusCode(200)
+                .body("itens", hasSize(1))
+                .body("itens[0].servicoId", equalTo(SERVICO_CORTE.toString()))
+                .body("valorTotal", comparesEqualTo(40.0f))
+                .body("duracaoTotalEmMinutos", equalTo(30));
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
