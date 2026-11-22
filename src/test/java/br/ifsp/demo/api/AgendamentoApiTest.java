@@ -394,6 +394,28 @@ class AgendamentoApiTest extends ApiTestBase {
                 .statusCode(400);
     }
 
+    @Test
+    @DisplayName("Deve retornar 204 e cancelar o agendamento")
+    void deveRetornar204ECancelarOAgendamento() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().construir());
+
+        requisicaoAutenticada(token)
+                .when()
+                .post("/api/v1/agendamentos/{id}/cancelamento", id)
+                .then()
+                .statusCode(204);
+
+        requisicaoAutenticada(token)
+                .when()
+                .get("/api/v1/agendamentos/{id}", id)
+                .then()
+                .statusCode(200)
+                .body("status", equalTo("CANCELADO"));
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
