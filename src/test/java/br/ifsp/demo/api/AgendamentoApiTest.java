@@ -582,6 +582,27 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", equalTo("O agendamento deve conter ao menos um serviço"));
     }
 
+    @Test
+    @DisplayName("Deve retornar 200 e o agendamento com o novo início ao reagendar")
+    void deveRetornar200EOAgendamentoComONovoInicioAoReagendar() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().comInicio(amanhaAs(10)).construir());
+        final LocalDateTime novoInicio = amanhaAs(14);
+
+        requisicaoAutenticada(token)
+                .body(Map.of("novoInicio", formatar(novoInicio)))
+                .when()
+                .post("/api/v1/agendamentos/{id}/reagendamento", id)
+                .then()
+                .statusCode(200)
+                .body("id", equalTo(id))
+                .body("inicio", equalTo(formatar(novoInicio)))
+                .body("fim", equalTo(formatar(novoInicio.plusMinutes(30))))
+                .body("quantidadeDeReagendamentos", equalTo(1));
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
