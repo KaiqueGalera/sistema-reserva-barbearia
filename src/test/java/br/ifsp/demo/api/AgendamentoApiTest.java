@@ -322,6 +322,29 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("[0].id", equalTo(idAtivo));
     }
 
+    @Test
+    @DisplayName("Deve retornar 200 e os dados do agendamento ao buscar por id")
+    void deveRetornar200EOsDadosDoAgendamentoAoBuscarPorId() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final UUID barbeiroId = UUID.randomUUID();
+        final LocalDateTime inicio = amanhaAs(10);
+        final String id = agendar(token, umAgendamento().comBarbeiro(barbeiroId).comInicio(inicio).construir());
+
+        requisicaoAutenticada(token)
+                .when()
+                .get("/api/v1/agendamentos/{id}", id)
+                .then()
+                .statusCode(200)
+                .body("id", equalTo(id))
+                .body("barbeiroId", equalTo(barbeiroId.toString()))
+                .body("inicio", equalTo(formatar(inicio)))
+                .body("status", equalTo("AGENDADO"))
+                .body("itens", hasSize(1))
+                .body("itens[0].servicoId", equalTo(SERVICO_CORTE.toString()));
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
