@@ -654,6 +654,23 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", notNullValue());
     }
 
+    @Test
+    @DisplayName("Deve retornar 422 ao confirmar presença antes da janela de 24 horas")
+    void deveRetornar422AoConfirmarPresencaAntesDaJanelaDe24Horas() {
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+        final String token = autenticar(usuario.getUsername(), senha);
+        final String id = agendar(token, umAgendamento().comInicio(amanhaAs(10).plusDays(1)).construir());
+
+        requisicaoAutenticada(token)
+                .when()
+                .post("/api/v1/agendamentos/{id}/confirmacao", id)
+                .then()
+                .statusCode(422)
+                .body("status", equalTo("UNPROCESSABLE_ENTITY"))
+                .body("message", equalTo("A confirmacao so e liberada 24 horas antes do atendimento"));
+    }
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
