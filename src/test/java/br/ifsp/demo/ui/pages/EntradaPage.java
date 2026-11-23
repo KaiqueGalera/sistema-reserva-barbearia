@@ -56,4 +56,15 @@ public class EntradaPage extends PaginaBase{
         return visivel(AVISO).getText();
     }
 
+
+    public EntradaPage abrirRotaProtegida(String rota) {
+        abrir(rota);
+        return this;
+    }
+
+    public void guardarTokenInvalido() {
+        ((JavascriptExecutor) driver).executeScript(
+                "localStorage.setItem('tres-cadeiras.token','token-invalido')");
+    }
+
 }
