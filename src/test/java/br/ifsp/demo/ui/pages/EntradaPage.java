@@ -5,7 +5,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
 public class EntradaPage extends PaginaBase{
-    private static final By ABA_ENTRAR = By.cssSelector("[data-testid='aba-entrar']");
     private static final By ABA_CRIAR  = By.cssSelector("[data-testid='aba-criar-conta']");
     private static final By ENVIAR     = By.cssSelector("[data-testid='enviar-acesso']");
     private static final By NOME       = By.cssSelector("[autocomplete='given-name']");
@@ -36,6 +35,15 @@ public class EntradaPage extends PaginaBase{
     public EntradaPage preencherLogin(String email, String senha) {
 
         digitar(EMAIL, email);  //digita no campo "email" a string email
+        digitar(SENHA, senha);
+        return this;
+    }
+
+    public EntradaPage cadastrarConta(String nome, String sobrenome, String email, String senha) {
+
+        digitar(NOME, nome);
+        digitar(SOBRENOME, sobrenome);
+        digitar(EMAIL, email);
         digitar(SENHA, senha);
         return this;
     }
