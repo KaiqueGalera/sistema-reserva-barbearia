@@ -6,6 +6,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class NovoHorarioPage extends BasePage {
+    private final By nomeInput = By.cssSelector("input[autocomplete='name']");
+
     public NovoHorarioPage(WebDriver driver) {
         super(driver);
     }
@@ -33,6 +35,15 @@ public class NovoHorarioPage extends BasePage {
         By botaoHorarioDisponivel = By.cssSelector(".seletor-horario button:not([disabled])");
 
         wait.until(ExpectedConditions.elementToBeClickable(botaoHorarioDisponivel)).click();
+
+        return this;
+    }
+
+    public NovoHorarioPage preencherNome(String nome) {
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(nomeInput));
+
+        input.clear();
+        input.sendKeys(nome);
 
         return this;
     }
