@@ -20,4 +20,12 @@ public class NovoHorarioPage extends BasePage {
 
         return this;
     }
+
+    public NovoHorarioPage selecionarBarbeiro(String nomeBarbeiro) {
+        By locator = By.cssSelector("[data-testid='barbeiro-" + nomeBarbeiro + "'] input[type = 'radio']");
+
+        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+
+        return this;
+    }
 }
