@@ -35,6 +35,7 @@ public abstract class UiTestBase {
         }
         opcoes.addArguments("--window-size=1366,768");
         driver = new ChromeDriver(opcoes);
+        setInitialPage();
     }
 
     @AfterEach
@@ -42,6 +43,9 @@ public abstract class UiTestBase {
         if (driver != null) {
             driver.quit();
         }
+    }
+
+    protected void setInitialPage() {
     }
 
     private static boolean respondeOk(String url) {
@@ -54,5 +58,4 @@ public abstract class UiTestBase {
             return false;
         }
     }
-
 }
