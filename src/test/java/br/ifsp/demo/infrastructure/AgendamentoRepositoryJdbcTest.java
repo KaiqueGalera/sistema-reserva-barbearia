@@ -68,4 +68,15 @@ class AgendamentoRepositoryJdbcTest extends PersistenceTestBase {
         assertThat(agendamentoRepository.porStatus(StatusAgendamento.AGENDADO)).hasSize(1);
         assertThat(agendamentoRepository.porStatus(StatusAgendamento.CANCELADO)).isEmpty();
     }
+
+    @Test
+    @DisplayName("Deve remover itens em cascade ao excluir agendamento")
+    void deveRemoverItensEmCascadeAoExcluirAgendamento() {
+        Agendamento agendamento = criarAgendamento(LocalDateTime.of(2030, 6, 10, 10, 0));
+        agendamentoRepository.salvar(agendamento);
+
+        jdbc.update("DELETE FROM agendamento WHERE id = ?", agendamento.getId().valor().toString());
+
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM item_de_servico", Integer.class)).isZero();
+    }
 }
