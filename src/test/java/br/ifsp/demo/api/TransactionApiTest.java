@@ -1,4 +1,4 @@
-\package br.ifsp.demo.api;
+package br.ifsp.demo.api;
 
 import br.ifsp.demo.security.user.User;
 import org.junit.jupiter.api.DisplayName;
