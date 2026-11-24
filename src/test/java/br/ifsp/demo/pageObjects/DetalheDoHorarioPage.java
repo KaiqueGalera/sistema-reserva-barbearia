@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 public class DetalheDoHorarioPage extends BasePage {
     private final By mensagemAviso = By.cssSelector("p.aviso[role='status']");
     private final By mensagemErro = By.cssSelector("p.aviso[role='alert']");
+    private final By status = By.cssSelector("span.linha__status");
 
     public DetalheDoHorarioPage(WebDriver driver) {
         super(driver);
@@ -18,5 +19,9 @@ public class DetalheDoHorarioPage extends BasePage {
 
     public String obterMensagemErro() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(mensagemErro)).getText();
+    }
+
+    public String obterStatus() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(status)).getText();
     }
 }
