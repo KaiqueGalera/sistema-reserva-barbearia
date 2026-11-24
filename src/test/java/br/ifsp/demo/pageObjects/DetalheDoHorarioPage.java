@@ -24,4 +24,12 @@ public class DetalheDoHorarioPage extends BasePage {
     public String obterStatus() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(status)).getText();
     }
+
+    public DetalheDoHorarioPage avaliar(int nota) {
+        By btnNota = By.cssSelector("button[aria-label='Dar nota " + nota + "']");
+
+        wait.until(ExpectedConditions.elementToBeClickable(btnNota)).click();
+
+        return this;
+    }
 }
