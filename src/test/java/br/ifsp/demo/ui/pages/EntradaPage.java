@@ -5,14 +5,15 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
 public class EntradaPage extends PaginaBase{
-    private static final By ABA_CRIAR  = By.cssSelector("[data-testid='aba-criar-conta']");
-    private static final By ENVIAR     = By.cssSelector("[data-testid='enviar-acesso']");
-    private static final By NOME       = By.cssSelector("[autocomplete='given-name']");
-    private static final By SOBRENOME  = By.cssSelector("[autocomplete='family-name']");
-    private static final By EMAIL      = By.cssSelector("[autocomplete='email']");
-    private static final By SENHA      = By.cssSelector("[autocomplete='new-password']");
-    private static final By ERRO       = By.cssSelector("[role='alert']");
-    private static final By AVISO      = By.cssSelector("[role='status']");
+    private static final By ABA_CRIAR   = By.cssSelector("[data-testid='aba-criar-conta']");
+    private static final By ENVIAR      = By.cssSelector("[data-testid='enviar-acesso']");
+    private static final By NOME        = By.cssSelector("[autocomplete='given-name']");
+    private static final By SOBRENOME   = By.cssSelector("[autocomplete='family-name']");
+    private static final By EMAIL       = By.cssSelector("[autocomplete='email']");
+    private static final By SENHA       = By.cssSelector("[autocomplete='new-password']");
+    private static final By SENHA_ATUAL = By.cssSelector("[autocomplete='current-password']");
+    private static final By ERRO        = By.cssSelector("[role='alert']");
+    private static final By AVISO       = By.cssSelector("[role='status']");
 
     public EntradaPage(WebDriver driver) { super(driver); }
 
@@ -35,7 +36,7 @@ public class EntradaPage extends PaginaBase{
     public EntradaPage preencherLogin(String email, String senha) {
 
         digitar(EMAIL, email);  //digita no campo "email" a string email
-        digitar(SENHA, senha);
+        digitar(SENHA_ATUAL, senha);
         return this;
     }
 
