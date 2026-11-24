@@ -79,4 +79,47 @@ class AgendamentoRepositoryJdbcTest extends PersistenceTestBase {
 
         assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM item_de_servico", Integer.class)).isZero();
     }
+
+    @Test
+    @DisplayName("Deve rejeitar NOT NULL ausente em agendamento")
+    void deveRejeitarNotNullAusente() {
+        assertThatThrownBy(() -> jdbc.update("""
+                INSERT INTO agendamento (id, cliente_id, barbeiro_id, inicio, fim, status,
+                                         quantidade_de_reagendamentos)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, UUID.randomUUID().toString(), UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(), "2030-06-10T10:00", "2030-06-10T10:30",
+                "AGENDADO", 0))
+                .isInstanceOf(DataAccessException.class);
+    }
+
+    @Test
+    @DisplayName("Deve rejeitar chave primária duplicada")
+    void deveRejeitarChavePrimariaDuplicada() {
+        String id = UUID.randomUUID().toString();
+        jdbc.update("""
+                INSERT INTO agendamento (id, cliente_id, barbeiro_id, contato_nome, contato_telefone,
+                                         inicio, fim, status, quantidade_de_reagendamentos)
+                VALUES (?, ?, ?, 'Cliente', '11999999999', '2030-06-10T10:00',
+                        '2030-06-10T10:30', 'AGENDADO', 0)
+                """, id, UUID.randomUUID().toString(), UUID.randomUUID().toString());
+
+        assertThatThrownBy(() -> jdbc.update("""
+                INSERT INTO agendamento (id, cliente_id, barbeiro_id, contato_nome, contato_telefone,
+                                         inicio, fim, status, quantidade_de_reagendamentos)
+                VALUES (?, ?, ?, 'Outro', '11888888888', '2030-06-10T11:00',
+                        '2030-06-10T11:30', 'AGENDADO', 0)
+                """, id, UUID.randomUUID().toString(), UUID.randomUUID().toString()))
+                .isInstanceOf(DataAccessException.class);
+    }
+
+    @Test
+    @DisplayName("Deve contar agendamentos e itens persistidos")
+    void deveContarAgendamentosEItensPersistidos() {
+        Agendamento agendamento = criarAgendamento(LocalDateTime.of(2030, 6, 10, 10, 0));
+        agendamentoRepository.salvar(agendamento);
+
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM agendamento", Integer.class)).isEqualTo(1);
+        assertThat(jdbc.queryForObject("SELECT COUNT(*) FROM item_de_servico", Integer.class)).isEqualTo(1);
+    }
 }
