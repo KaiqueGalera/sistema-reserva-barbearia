@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class NovoHorarioPage extends BasePage {
     private final By nomeInput = By.cssSelector("input[autocomplete='name']");
+    private final By telefoneInput = By.cssSelector("input[autocomplete='tel-national']");
 
     public NovoHorarioPage(WebDriver driver) {
         super(driver);
@@ -44,6 +45,15 @@ public class NovoHorarioPage extends BasePage {
 
         input.clear();
         input.sendKeys(nome);
+
+        return this;
+    }
+
+    public NovoHorarioPage preencherTelefone(String telefone) {
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(telefoneInput));
+
+        input.clear();
+        input.sendKeys(telefone);
 
         return this;
     }
