@@ -31,4 +31,29 @@ class AgendamentoRepositoryJdbcTest extends PersistenceTestBase {
         assertThat(recuperado.getItens()).hasSize(1);
         assertThat(recuperado.getItens().getFirst().getNomeDoServico()).isEqualTo("Corte");
     }
+
+    @Test
+    @DisplayName("Deve ordenar agendamentos do cliente por horário de início")
+    void deveOrdenarAgendamentosDoClientePorInicio() {
+        Agendamento tarde = criarAgendamento(LocalDateTime.of(2030, 6, 10, 15, 0));
+        Agendamento manha = Agendamento.reconstituir(
+                new br.ifsp.demo.domain.agendamento.AgendamentoId(UUID.randomUUID()),
+                tarde.getClienteId(), tarde.getBarbeiroId(), tarde.getContato(),
+                new br.ifsp.demo.domain.comum.Periodo(LocalDateTime.of(2030, 6, 10, 9, 0),
+                        LocalDateTime.of(2030, 6, 10, 9, 30)),
+                java.util.List.of(new br.ifsp.demo.domain.agendamento.ItemDeServico(
+                        new br.ifsp.demo.domain.agendamento.ItemId(UUID.randomUUID()),
+                        new br.ifsp.demo.domain.servico.ServicoId(UUID.fromString("22222222-2222-2222-2222-222222222222")),
+                        "Barba", new br.ifsp.demo.domain.comum.Dinheiro(new java.math.BigDecimal("25.00")), 20)),
+                StatusAgendamento.AGENDADO, 0, null);
+
+        agendamentoRepository.salvar(tarde);
+        agendamentoRepository.salvar(manha);
+
+        assertThat(agendamentoRepository.porCliente(tarde.getClienteId()))
+                .extracting(agendamento -> agendamento.getPeriodo().inicio().toLocalTime().toString())
+                .containsExactly("09:00", "15:00");
+    }
+
+
 }
