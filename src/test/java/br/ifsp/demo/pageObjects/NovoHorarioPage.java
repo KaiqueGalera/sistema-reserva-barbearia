@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 public class NovoHorarioPage extends BasePage {
     private final By nomeInput = By.cssSelector("input[autocomplete='name']");
     private final By telefoneInput = By.cssSelector("input[autocomplete='tel-national']");
+    private final By botaoEnviar = By.cssSelector("button[data-testid='enviar-agendamento']");
 
     public NovoHorarioPage(WebDriver driver) {
         super(driver);
@@ -56,5 +57,11 @@ public class NovoHorarioPage extends BasePage {
         input.sendKeys(telefone);
 
         return this;
+    }
+
+    public DetalheDoHorarioPage submeterAgendamentoComSucesso() {
+        wait.until(ExpectedConditions.elementToBeClickable(botaoEnviar)).click();
+
+        return new DetalheDoHorarioPage(driver);
     }
 }
