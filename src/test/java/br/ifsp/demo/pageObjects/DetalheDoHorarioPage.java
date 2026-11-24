@@ -8,10 +8,12 @@ public class DetalheDoHorarioPage extends BasePage {
     private final By mensagemAviso = By.cssSelector("p.aviso[role='status']");
     private final By mensagemErro = By.cssSelector("p.aviso[role='alert']");
     private final By status = By.cssSelector("span.linha__status");
+
     private final By btnAbrirReagendamento = By.xpath("//button[text()='Escolher outro horário']");
     private final By btnConfirmarReagendamento = By.xpath("//button[text()='Mudar para este horário']");
     private final By btnAbrirCancelamento = By.xpath("//button[text()='Cancelar este horário']");
     private final By btnConfirmarCancelamento = By.xpath("//button[text()='Cancelar horário']");
+    private final By btnConfirmarPresenca = By.xpath("//button[text()='Confirmar presença']");
 
     public DetalheDoHorarioPage(WebDriver driver) {
         super(driver);
@@ -51,6 +53,12 @@ public class DetalheDoHorarioPage extends BasePage {
     public DetalheDoHorarioPage cancelarHorario() {
         wait.until(ExpectedConditions.elementToBeClickable(btnAbrirCancelamento)).click();
         wait.until(ExpectedConditions.elementToBeClickable(btnConfirmarCancelamento)).click();
+
+        return this;
+    }
+
+    public DetalheDoHorarioPage confirmarPresenca() {
+        wait.until(ExpectedConditions.elementToBeClickable(btnConfirmarPresenca)).click();
 
         return this;
     }
