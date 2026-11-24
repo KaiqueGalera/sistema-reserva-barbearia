@@ -20,4 +20,14 @@ class TransactionApiTest extends ApiTestBase {
                 .statusCode(200)
                 .body(org.hamcrest.Matchers.containsString(usuario.getId().toString()));
     }
+
+    @Test
+    @DisplayName("Deve retornar 401 no hello sem autenticação")
+    void deveRetornar401NoHelloSemAutenticacao() {
+        requisicao()
+                .when()
+                .get("/api/v1/hello")
+                .then()
+                .statusCode(401);
+    }
 }
