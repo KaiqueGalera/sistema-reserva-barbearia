@@ -64,4 +64,10 @@ public class NovoHorarioPage extends BasePage {
 
         return new DetalheDoHorarioPage(driver);
     }
+
+    public NovoHorarioPage submeterAgendamentoComErro() {
+        wait.until(ExpectedConditions.elementToBeClickable(botaoEnviar)).click();
+
+        return this;
+    }
 }
