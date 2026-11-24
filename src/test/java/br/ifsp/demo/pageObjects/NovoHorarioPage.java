@@ -28,4 +28,12 @@ public class NovoHorarioPage extends BasePage {
 
         return this;
     }
+
+    public NovoHorarioPage selecionarHorarioDisponivel() {
+        By botaoHorarioDisponivel = By.cssSelector(".seletor-horario button:not([disabled])");
+
+        wait.until(ExpectedConditions.elementToBeClickable(botaoHorarioDisponivel)).click();
+
+        return this;
+    }
 }
