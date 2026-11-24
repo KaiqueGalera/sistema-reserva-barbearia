@@ -10,6 +10,8 @@ public class DetalheDoHorarioPage extends BasePage {
     private final By status = By.cssSelector("span.linha__status");
     private final By btnAbrirReagendamento = By.xpath("//button[text()='Escolher outro horário']");
     private final By btnConfirmarReagendamento = By.xpath("//button[text()='Mudar para este horário']");
+    private final By btnAbrirCancelamento = By.xpath("//button[text()='Cancelar este horário']");
+    private final By btnConfirmarCancelamento = By.xpath("//button[text()='Cancelar horário']");
 
     public DetalheDoHorarioPage(WebDriver driver) {
         super(driver);
@@ -42,6 +44,13 @@ public class DetalheDoHorarioPage extends BasePage {
 
         wait.until(ExpectedConditions.elementToBeClickable(botaoHorarioDisponivel)).click();
         wait.until(ExpectedConditions.elementToBeClickable(btnConfirmarReagendamento)).click();
+
+        return this;
+    }
+
+    public DetalheDoHorarioPage cancelarHorario() {
+        wait.until(ExpectedConditions.elementToBeClickable(btnAbrirCancelamento)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(btnConfirmarCancelamento)).click();
 
         return this;
     }
