@@ -55,5 +55,17 @@ class AgendamentoRepositoryJdbcTest extends PersistenceTestBase {
                 .containsExactly("09:00", "15:00");
     }
 
+    @Test
+    @DisplayName("Deve filtrar por barbeiro, data e status")
+    void deveFiltrarPorBarbeiroDataEStatus() {
+        Agendamento agendamento = criarAgendamento(LocalDateTime.of(2030, 6, 10, 10, 0));
+        agendamentoRepository.salvar(agendamento);
 
+        assertThat(agendamentoRepository.porBarbeiroEData(
+                agendamento.getBarbeiroId(), LocalDate.of(2030, 6, 10))).hasSize(1);
+        assertThat(agendamentoRepository.porBarbeiroEData(
+                new BarbeiroId(UUID.randomUUID()), LocalDate.of(2030, 6, 10))).isEmpty();
+        assertThat(agendamentoRepository.porStatus(StatusAgendamento.AGENDADO)).hasSize(1);
+        assertThat(agendamentoRepository.porStatus(StatusAgendamento.CANCELADO)).isEmpty();
+    }
 }
