@@ -13,23 +13,30 @@ public final class UsuarioUiHelper {
     private UsuarioUiHelper() {
     }
 
-    //cria a conta, espera carregar e clicar em sair antes de o teste fazer o login
-
-    public static Credenciais cadastrarNaUi(WebDriver driver) {
-        final Credenciais credenciais = new Credenciais(
+    public static Credenciais novasCredenciais() {
+        return new Credenciais(
                 FAKER.name().firstName(),
                 FAKER.name().lastName(),
                 "ui_" + System.nanoTime() + "@teste.com",
                 FAKER.number().digits(6));
+    }
 
+    // Cria a conta pela UI e deixa o usuário logado na agenda
+    public static Credenciais cadastrarNaUiMantendoLogado(WebDriver driver) {
+        final Credenciais c = novasCredenciais();
         new EntradaPage(driver)
                 .abrirPag()
                 .alternarParaCriarConta()
-                .cadastrarConta(credenciais.nome(), credenciais.sobrenome(),
-                        credenciais.email(), credenciais.senha())
+                .cadastrarConta(c.nome(), c.sobrenome(), c.email(), c.senha())
                 .enviar();
+        new MinhaAgendaPage(driver);
+        return c;
+    }
 
-        new MinhaAgendaPage(driver).sair();   // espera a agenda carregar e clica em Sair
-        return credenciais;
+    // Cria a conta pela UI e já sai (usuário fica deslogado)
+    public static Credenciais cadastrarNaUi(WebDriver driver) {
+        final Credenciais c = cadastrarNaUiMantendoLogado(driver);
+        new MinhaAgendaPage(driver).sair();
+        return c;
     }
 }

@@ -63,6 +63,22 @@ public class AutenticacaoUiTest extends UiTestBase {
     }
 
 
+    @Test
+    @DisplayName("Deve mostrar erro ao criar conta com e-mail já cadastrado")
+    void deveMostrarErroAoCadastrarEmailJaExistente() {
+        final var existente = UsuarioUiHelper.cadastrarNaUi(driver);
+
+        final EntradaPage entrada = new EntradaPage(driver)
+                .abrirPag()
+                .alternarParaCriarConta()
+                .cadastrarConta(existente.nome(), existente.sobrenome(), existente.email(), existente.senha())
+                .enviar();
+
+        assertThat(entrada.mensagemDeErro()).contains("já tem conta");
+        assertThat(entrada.caminhoAtual()).isEqualTo("/entrar");
+    }
+
+
 
 
 
