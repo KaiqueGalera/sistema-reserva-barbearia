@@ -63,4 +63,16 @@ public final class UsuarioUiHelper {
                 .enviar();
         return new MinhaAgendaPage(driver);
     }
+
+    // cria a conta pela API e agenda um corte às 10h para cada "daqui a N dias" informado
+    static Credenciais contaComHorarios(int... diasAFrente) {
+
+        final Credenciais credenciais = UsuarioUiHelper.criarContaPelaApi();
+        final String token = ApiUiHelper.autenticar(credenciais);
+
+        for (int dias : diasAFrente) {
+            ApiUiHelper.agendarCorte(token, dias);
+        }
+        return credenciais;
+    }
 }
