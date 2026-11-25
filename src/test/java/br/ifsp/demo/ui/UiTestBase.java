@@ -53,8 +53,11 @@ public abstract class UiTestBase {
             final HttpURLConnection conexao = (HttpURLConnection) URI.create(url).toURL().openConnection();
             conexao.setConnectTimeout(2000);
             conexao.setReadTimeout(2000);
-            return conexao.getResponseCode() < 400;
+            final int codigo = conexao.getResponseCode();
+            System.err.println("[checagem] " + url + " -> HTTP " + codigo);
+            return codigo < 400;
         } catch (Exception e) {
+            System.err.println("[checagem] " + url + " -> FALHOU: " + e);
             return false;
         }
     }
