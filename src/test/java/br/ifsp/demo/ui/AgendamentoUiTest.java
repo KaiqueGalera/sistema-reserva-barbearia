@@ -1,6 +1,7 @@
 package br.ifsp.demo.ui;
 
 import com.github.javafaker.Faker;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.openqa.selenium.WebDriver;
@@ -16,5 +17,10 @@ public class AgendamentoUiTest {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         faker = Faker.instance();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        if (driver != null) driver.quit();
     }
 }
