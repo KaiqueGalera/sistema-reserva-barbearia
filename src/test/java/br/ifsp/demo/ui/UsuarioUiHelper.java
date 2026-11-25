@@ -1,25 +1,35 @@
 package br.ifsp.demo.ui;
 
 import br.ifsp.demo.ui.pages.EntradaPage;
+import br.ifsp.demo.ui.pages.MinhaAgendaPage;
+import org.openqa.selenium.WebDriver;
 
 import static br.ifsp.demo.ui.ConfiguracaoUi.FAKER;
 
-public class UsuarioUiHelper{
+public final class UsuarioUiHelper {
 
-    private static String ultimoNome;
-    private static String ultimoSobrenome;
-    private static String ultimoEmail;
-    private static String ultimaSenha;
+    public record Credenciais(String nome, String sobrenome, String email, String senha) {}
 
-    public static void cadastrarNaUi(EntradaPage entradaPage) {
-        ultimoNome = FAKER.name().firstName();
-        ultimoSobrenome = FAKER.name().lastName();
-        ultimoEmail = "123_" + FAKER.internet().emailAddress();
-        ultimaSenha = FAKER.number().digits(6);
+    private UsuarioUiHelper() {
+    }
 
-        entradaPage.abrirPag()
+    //cria a conta, espera carregar e clicar em sair antes de o teste fazer o login
+
+    public static Credenciais cadastrarNaUi(WebDriver driver) {
+        final Credenciais credenciais = new Credenciais(
+                FAKER.name().firstName(),
+                FAKER.name().lastName(),
+                "ui_" + System.nanoTime() + "@teste.com",
+                FAKER.number().digits(6));
+
+        new EntradaPage(driver)
+                .abrirPag()
                 .alternarParaCriarConta()
-                .cadastrarConta(ultimoNome, ultimoSobrenome, ultimoEmail, ultimaSenha)
+                .cadastrarConta(credenciais.nome(), credenciais.sobrenome(),
+                        credenciais.email(), credenciais.senha())
                 .enviar();
+
+        new MinhaAgendaPage(driver).sair();   // espera a agenda carregar e clica em Sair
+        return credenciais;
     }
 }
