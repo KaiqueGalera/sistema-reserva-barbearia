@@ -54,6 +54,9 @@ public abstract class PaginaBase {
         espera.until(urlToBe(URL_FRONT + caminho));
     }
 
+    public void aguardarCaminhoIniciadoPor(String prefixo) {
+        espera.until(urlContains(URL_FRONT + prefixo));
+    }
 
     protected void garantirCaminho(String esperado) {
         try {
