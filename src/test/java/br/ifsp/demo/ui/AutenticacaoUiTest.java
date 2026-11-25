@@ -100,7 +100,19 @@ public class AutenticacaoUiTest extends UiTestBase {
     }
 
 
+    @Test
+    @DisplayName("Não deve aceitar e-mail sem @ no formulário de login")
+    void naoDeveAceitarEmailSemArrobaNoFormularioDeLogin() {
 
+        final EntradaPage entrada = new EntradaPage(driver)
+                .abrirPag()
+                .preencherLogin("usuariosemarroba.com", "123456")
+                .enviar();
+
+        assertThat(entrada.emailEhValido()).isFalse();
+
+        assertThat(entrada.caminhoAtual()).isEqualTo("/entrar");
+    }
 
 
 

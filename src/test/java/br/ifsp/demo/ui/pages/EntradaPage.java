@@ -96,4 +96,9 @@ public class EntradaPage extends PaginaBase{
         return this;
     }
 
+    public boolean emailEhValido() {
+        return (Boolean) ((JavascriptExecutor) driver).executeScript(
+                "return arguments[0].checkValidity();", visivel(EMAIL));
+    }
+
 }
