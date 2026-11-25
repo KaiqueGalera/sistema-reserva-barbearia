@@ -1,12 +1,13 @@
 package br.ifsp.demo.ui;
 
 import br.ifsp.demo.ui.pages.MinhaAgendaPage;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static br.ifsp.demo.ui.UsuarioUiHelper.contaComHorarios;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Tag("UiTest")
 public class MinhaAgendaUiTest extends UiTestBase {
@@ -83,6 +84,24 @@ public class MinhaAgendaUiTest extends UiTestBase {
         assertThat(agenda.quantidadeDepoisDesse()).isEqualTo(2);
         assertThat(agenda.quantidadeNoHistorico()).isZero();
     }
+
+    @Test
+    @DisplayName("Deve mostrar horário cancelado no histórico")
+    void deveMostrarHorarioCanceladoNoHistorico() {
+
+        final UsuarioUiHelper.Credenciais credenciais = UsuarioUiHelper.criarContaPelaApi();
+        final String token = ApiUiHelper.autenticar(credenciais);
+        final Response agendamento = ApiUiHelper.agendarCorte(token, 13);
+        ApiUiHelper.cancelar(token, agendamento);
+
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, credenciais);
+
+        assertThat(agenda.temProximoHorario()).isFalse();
+        assertThat(agenda.quantidadeNoHistorico()).isEqualTo(1);
+        assertThat(agenda.statusDasLinhasDoHistorico().getFirst()).contains("Cancelado");
+    }
+
+
 
 
 }

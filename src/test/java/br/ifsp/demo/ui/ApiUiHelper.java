@@ -8,7 +8,6 @@ import io.restassured.response.Response;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,10 +42,8 @@ public final class ApiUiHelper {
     }
 
     public static Response agendarCorte(String token, int diasAFrente) {
-        LocalDateTime inicio = LocalDateTime.of(
-                LocalDate.now().plusDays(diasAFrente),
-                LocalTime.of(10, 0)
-        );
+
+        final LocalDateTime inicio = primeiroHorarioLivre(token, LocalDate.now().plusDays(diasAFrente));
 
         AgendarAtendimentoRequest request = new AgendarAtendimentoRequest(
                 BARBEIRO_ID,
@@ -68,4 +65,37 @@ public final class ApiUiHelper {
                 .extract()
                 .response();
     }
+
+    private static LocalDateTime primeiroHorarioLivre(String token, LocalDate data) {
+        final String inicio = given()
+                .baseUri(URL_API)
+                .header("Authorization", "Bearer " + token)
+                .queryParam("data", data.toString())
+                .queryParam("servicos", SERVICO_CORTE_ID)
+                .when()
+                .get("/api/v1/barbeiros/{id}/horarios-disponiveis", BARBEIRO_ID)
+                .then()
+                .statusCode(200)
+                .extract()
+                .path("[0].inicio");
+
+        if (inicio == null) {
+            throw new IllegalStateException("Nenhum horário livre em " + data);
+        }
+        return LocalDateTime.parse(inicio);
+    }
+
+
+    public static void cancelar(String token, Response agendamentoCriado) {
+        final String agendamentoId = agendamentoCriado.jsonPath().getString("id");
+
+        given()
+                .baseUri(URL_API)
+                .header("Authorization", "Bearer " + token)
+                .when()
+                .post("/api/v1/agendamentos/{id}/cancelamento", agendamentoId)
+                .then()
+                .statusCode(204);
+    }
+
 }
