@@ -114,8 +114,4 @@ public class AutenticacaoUiTest extends UiTestBase {
         assertThat(entrada.caminhoAtual()).isEqualTo("/entrar");
     }
 
-
-
-
-
 }
