@@ -70,4 +70,19 @@ public class MinhaAgendaUiTest extends UiTestBase {
         assertThat(agenda.statusDoProximo()).isEqualTo("Falta confirmar presença");
     }
 
+
+    @Test
+    @DisplayName("Deve listar os demais horários futuros em 'Depois desse'")
+    void deveListarHorariosSeguintesEmDepoisDesse() {
+
+        final UsuarioUiHelper.Credenciais credenciais = contaComHorarios(10, 11, 12);
+
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, credenciais);
+
+        assertThat(agenda.temProximoHorario()).isTrue();
+        assertThat(agenda.quantidadeDepoisDesse()).isEqualTo(2);
+        assertThat(agenda.quantidadeNoHistorico()).isZero();
+    }
+
+
 }
