@@ -23,4 +23,19 @@ public class MinhaAgendaUiTest extends UiTestBase {
         assertThat(agenda.estaVazia()).isTrue();
         assertThat(agenda.tituloDaAgendaVazia()).isEqualTo("Sua agenda está livre");
     }
+
+
+
+    @Test
+    @DisplayName("Deve ir para novo horário pelo botão da agenda vazia")
+    void eveIrParaNovoHorarioPeloBotaoDaAgendaVazia() {
+
+        final MinhaAgendaPage agenda = new MinhaAgendaPage(driver);
+
+        agenda.clicarMarcarHorarioDaAgendaVazia();
+
+        agenda.aguardarCaminho("/novo");
+
+        assertThat(agenda.caminhoAtual()).isEqualTo("/novo");
+    }
 }
