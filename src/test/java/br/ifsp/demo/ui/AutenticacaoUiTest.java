@@ -30,6 +30,24 @@ public class AutenticacaoUiTest extends UiTestBase {
         assertThat(agendaPage.caminhoAtual()).isEqualTo("/");
     }
 
+    @Test
+    @DisplayName("Deve mostrar erro e permanecer em /entrar com e-mail não cadastradoe não sair da página")
+    void deveMostrarErroComEmailNaoCadastradoENaoSairDaPagina() {
+
+        //cadastra a conta pelo UsuarioUiHelper
+        final var credenciais = UsuarioUiHelper.cadastrarNaUi(driver);
+
+        //entra com essa conta, com os dados errados
+        final EntradaPage entrada = new EntradaPage(driver)
+                .abrirPag()
+                .preencherLogin("email-errado@gmail.com", credenciais.senha())
+                .enviar();
+
+        assertThat(entrada.mensagemDeErro()).contains("E-mail ou senha incorretos");
+        assertThat(entrada.caminhoAtual()).isEqualTo("/entrar");
+
+    }
+
 
 
 
