@@ -126,4 +126,18 @@ public class MinhaAgendaUiTest extends UiTestBase {
 
 
 
+    @Test
+    @DisplayName("Deve abrir o detalhe ao clicar na placa do próximo horário")
+    void deveAbrirDetalheAoClicarNaPlaca() {
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, contaComHorarios(14));
+
+        agenda.abrirProximoHorario();
+
+        agenda.aguardarCaminhoIniciadoPor("/horarios/");
+        assertThat(agenda.caminhoAtual()).startsWith("/horarios/");
+    }
+
+
+
+
 }
