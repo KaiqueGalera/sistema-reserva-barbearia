@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static br.ifsp.demo.ui.UsuarioUiHelper.contaComHorarios;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Tag("UiTest")
@@ -52,4 +53,21 @@ public class MinhaAgendaUiTest extends UiTestBase {
         agenda.aguardarCaminho("/novo");
         assertThat(agenda.caminhoAtual()).isEqualTo("/novo");
     }
+
+
+    @Test
+    @DisplayName("Deve mostrar a placa do próximo horário com os dados do agendamento")
+    void deveMostrarPlacaDoProximoHorario() {
+
+        final UsuarioUiHelper.Credenciais credenciais = contaComHorarios(2);
+
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, credenciais);
+
+        assertThat(agenda.temProximoHorario()).isTrue();
+        assertThat(agenda.diaDoProximo()).contains("Seu próximo horário é");
+        assertThat(agenda.horaDoProximo()).contains("10");
+        assertThat(agenda.detalheDoProximo()).contains("Corte");
+        assertThat(agenda.statusDoProximo()).isEqualTo("Falta confirmar presença");
+    }
+
 }
