@@ -48,6 +48,20 @@ public class AutenticacaoUiTest extends UiTestBase {
 
     }
 
+    @Test
+    @DisplayName("Deve mostrar erro e permanecer em /entrar com senha incorreta")
+    void deveMostrarErroComSenhaIncorreta() {
+        final var credenciais = UsuarioUiHelper.cadastrarNaUi(driver);
+
+        final EntradaPage entrada = new EntradaPage(driver)
+                .abrirPag()
+                .preencherLogin(credenciais.email(), "senha-errada")
+                .enviar();
+
+        assertThat(entrada.mensagemDeErro()).contains("E-mail ou senha incorretos");
+        assertThat(entrada.caminhoAtual()).isEqualTo("/entrar");
+    }
+
 
 
 
