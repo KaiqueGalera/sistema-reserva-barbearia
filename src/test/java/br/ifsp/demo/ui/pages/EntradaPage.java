@@ -4,7 +4,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
+
 public class EntradaPage extends PaginaBase{
+    private static final By ABA_ENTRAR = By.cssSelector("[data-testid='aba-entrar']");
     private static final By ABA_CRIAR   = By.cssSelector("[data-testid='aba-criar-conta']");
     private static final By ENVIAR      = By.cssSelector("[data-testid='enviar-acesso']");
     private static final By NOME        = By.cssSelector("[autocomplete='given-name']");
@@ -74,6 +77,23 @@ public class EntradaPage extends PaginaBase{
     public void guardarTokenInvalido() {
         ((JavascriptExecutor) driver).executeScript(
                 "localStorage.setItem('tres-cadeiras.token','token-invalido')");
+    }
+
+    public boolean campoDeNomeVisivel() {
+        return visivel(NOME).isDisplayed();
+    }
+
+    public boolean campoDeSobrenomeVisivel() {
+        return visivel(SOBRENOME).isDisplayed();
+    }
+
+    public boolean campoDeNomeAusente() {
+        return espera.until(invisibilityOfElementLocated(NOME));
+    }
+
+    public EntradaPage alternarParaEntrar() {
+        clicar(ABA_ENTRAR);
+        return this;
     }
 
 }

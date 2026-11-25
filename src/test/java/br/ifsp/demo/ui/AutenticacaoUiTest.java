@@ -51,6 +51,7 @@ public class AutenticacaoUiTest extends UiTestBase {
     @Test
     @DisplayName("Deve mostrar erro e permanecer em /entrar com senha incorreta")
     void deveMostrarErroComSenhaIncorreta() {
+
         final var credenciais = UsuarioUiHelper.cadastrarNaUi(driver);
 
         final EntradaPage entrada = new EntradaPage(driver)
@@ -66,6 +67,7 @@ public class AutenticacaoUiTest extends UiTestBase {
     @Test
     @DisplayName("Deve mostrar erro ao criar conta com e-mail já cadastrado")
     void deveMostrarErroAoCadastrarEmailJaExistente() {
+
         final var existente = UsuarioUiHelper.cadastrarNaUi(driver);
 
         final EntradaPage entrada = new EntradaPage(driver)
@@ -77,6 +79,26 @@ public class AutenticacaoUiTest extends UiTestBase {
         assertThat(entrada.mensagemDeErro()).contains("já tem conta");
         assertThat(entrada.caminhoAtual()).isEqualTo("/entrar");
     }
+
+
+    @Test
+    @DisplayName("Deve alternar entre as abas Entrar e Criar conta mostrando os campos certos")
+    void deveAlternarEntreAbasMostrandoOsCamposCertos() {
+
+        final EntradaPage entrada = new EntradaPage(driver).abrirPag();
+
+        assertThat(entrada.campoDeNomeAusente()).isTrue();
+
+        entrada.alternarParaCriarConta();
+
+        assertThat(entrada.campoDeNomeVisivel()).isTrue();
+        assertThat(entrada.campoDeSobrenomeVisivel()).isTrue();
+
+        entrada.alternarParaEntrar();
+
+        assertThat(entrada.campoDeNomeAusente()).isTrue();
+    }
+
 
 
 
