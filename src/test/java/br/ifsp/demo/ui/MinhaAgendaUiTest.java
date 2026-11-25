@@ -124,8 +124,6 @@ public class MinhaAgendaUiTest extends UiTestBase {
     }
 
 
-
-
     @Test
     @DisplayName("Deve abrir o detalhe ao clicar na placa do próximo horário")
     void deveAbrirDetalheAoClicarNaPlaca() {
@@ -135,6 +133,18 @@ public class MinhaAgendaUiTest extends UiTestBase {
 
         agenda.aguardarCaminhoIniciadoPor("/horarios/");
         assertThat(agenda.caminhoAtual()).startsWith("/horarios/");
+    }
+
+
+    @Test
+    @DisplayName("Deve manter o login e a agenda ao recarregar a página")
+    void deveManterAgendaAoRecarregar() {
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, contaComHorarios(15));
+
+        agenda.recarregar();
+
+        assertThat(agenda.caminhoAtual()).isEqualTo("/");
+        assertThat(agenda.temProximoHorario()).isTrue();
     }
 
 
