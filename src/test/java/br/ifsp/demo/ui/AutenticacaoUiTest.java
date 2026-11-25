@@ -31,7 +31,7 @@ public class AutenticacaoUiTest extends UiTestBase {
     }
 
     @Test
-    @DisplayName("Deve mostrar erro e permanecer em /entrar com e-mail não cadastradoe não sair da página")
+    @DisplayName("Deve mostrar erro e permanecer em /entrar com e-mail não cadastrado e não sair da página")
     void deveMostrarErroComEmailNaoCadastradoENaoSairDaPagina() {
 
         //cadastra a conta pelo UsuarioUiHelper
