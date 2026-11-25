@@ -1,9 +1,13 @@
 package br.ifsp.demo.ui;
 
+import br.ifsp.demo.pageObjects.DetalheDoHorarioPage;
+import br.ifsp.demo.pageObjects.NovoHorarioPage;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @Tag("UiTest")
 public class AgendamentoUiTest {
@@ -30,5 +34,18 @@ public class AgendamentoUiTest {
         driver.get(BASE_URL + "/novo");
 
         String nome = faker.name().fullName();
+        String telefone = faker.phoneNumber().cellPhone();
+
+        NovoHorarioPage novoPage = new NovoHorarioPage(driver);
+
+        DetalheDoHorarioPage detalhePage = novoPage
+                .selecionarServico("Corte")
+                .selecionarBarbeiro("Barbeiro")
+                .selecionarHorarioDisponivel()
+                .preencherNome(nome)
+                .preencherTelefone(telefone)
+                .submeterAgendamentoComSucesso();
+
+        assertThat(detalhePage.obterMensagemAviso()).isEqualTo("Horário marcado.");
     }
 }
