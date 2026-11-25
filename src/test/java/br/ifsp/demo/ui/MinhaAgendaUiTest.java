@@ -39,4 +39,17 @@ public class MinhaAgendaUiTest extends UiTestBase {
 
         assertThat(agenda.caminhoAtual()).isEqualTo("/novo");
     }
+
+
+    @Test
+    @DisplayName("Deve ir para novo horário pelo menu")
+    void deveIrParaNovoHorarioPeloMenu() {
+
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, UsuarioUiHelper.criarContaPelaApi());
+
+        agenda.clicarMarcarHorarioNoMenu();
+
+        agenda.aguardarCaminho("/novo");
+        assertThat(agenda.caminhoAtual()).isEqualTo("/novo");
+    }
 }

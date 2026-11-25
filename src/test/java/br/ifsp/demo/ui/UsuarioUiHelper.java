@@ -1,10 +1,14 @@
 package br.ifsp.demo.ui;
 
+import br.ifsp.demo.security.auth.RegisterUserRequest;
 import br.ifsp.demo.ui.pages.EntradaPage;
 import br.ifsp.demo.ui.pages.MinhaAgendaPage;
+import io.restassured.http.ContentType;
 import org.openqa.selenium.WebDriver;
 
 import static br.ifsp.demo.ui.ConfiguracaoUi.FAKER;
+import static br.ifsp.demo.ui.ConfiguracaoUi.URL_API;
+import static io.restassured.RestAssured.given;
 
 public final class UsuarioUiHelper {
 
@@ -38,5 +42,25 @@ public final class UsuarioUiHelper {
         final Credenciais c = cadastrarNaUiMantendoLogado(driver);
         new MinhaAgendaPage(driver).sair();
         return c;
+    }
+
+
+    // Cria a conta direto pela API (rápido, sem passar pela tela)
+    public static Credenciais criarContaPelaApi() {
+        final Credenciais c = novasCredenciais();
+        given().baseUri(URL_API).contentType(ContentType.JSON)
+                .body(new RegisterUserRequest(c.nome(), c.sobrenome(), c.email(), c.senha()))
+                .when().post("/api/v1/register")
+                .then().statusCode(201);
+        return c;
+    }
+
+    // Faz login pela tela e devolve a agenda
+    public static MinhaAgendaPage entrarPelaUi(WebDriver driver, Credenciais c) {
+        new EntradaPage(driver)
+                .abrirPag()
+                .preencherLogin(c.email(), c.senha())
+                .enviar();
+        return new MinhaAgendaPage(driver);
     }
 }
