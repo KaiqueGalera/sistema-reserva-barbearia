@@ -6,6 +6,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class LoginPage extends BasePage {
     private final By emailInput = By.cssSelector("input[autocomplete='email']");
+    private final By senhaInput = By.cssSelector("input[autocomplete='current-password']");
 
     public LoginPage(WebDriver driver) {
         super(driver);
@@ -14,6 +15,12 @@ public class LoginPage extends BasePage {
     public LoginPage preencherEmail(String email) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(emailInput))
                 .sendKeys(email);
+
+        return this;
+    }
+
+    public LoginPage preencherSenha(String senha) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(senhaInput)).sendKeys(senha);
 
         return this;
     }
