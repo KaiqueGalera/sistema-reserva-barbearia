@@ -1,5 +1,6 @@
 package br.ifsp.demo.ui;
 
+import br.ifsp.demo.ui.pages.DetalhesDoHorarioPage;
 import br.ifsp.demo.ui.pages.MinhaAgendaPage;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -99,6 +100,27 @@ public class MinhaAgendaUiTest extends UiTestBase {
         assertThat(agenda.temProximoHorario()).isFalse();
         assertThat(agenda.quantidadeNoHistorico()).isEqualTo(1);
         assertThat(agenda.statusDasLinhasDoHistorico().getFirst()).contains("Cancelado");
+    }
+
+
+    @Test
+    @DisplayName("Deve cancelar pelo detalhe e ver o horário cancelado no histórico da agenda")
+    void deveCancelarPeloDetalheEVerNoHistorico() {
+
+        final UsuarioUiHelper.Credenciais credenciais = UsuarioUiHelper.contaComHorarios(13);
+
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, credenciais);
+        agenda.abrirProximoHorario();
+
+        final DetalhesDoHorarioPage detalhe = new DetalhesDoHorarioPage(driver);
+        detalhe.solicitarCancelamento().confirmarCancelamento();
+        assertThat(detalhe.mensagemDeAviso()).contains("Horário cancelado");
+
+        final MinhaAgendaPage agendaAtualizada = detalhe.voltarParaAgenda();
+
+        assertThat(agendaAtualizada.temProximoHorario()).isFalse();
+        assertThat(agendaAtualizada.quantidadeNoHistorico()).isEqualTo(1);
+        assertThat(agendaAtualizada.statusDasLinhasDoHistorico().getFirst()).contains("Cancelado");
     }
 
 
