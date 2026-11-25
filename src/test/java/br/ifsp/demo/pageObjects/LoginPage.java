@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 public class LoginPage extends BasePage {
     private final By emailInput = By.cssSelector("input[autocomplete='email']");
     private final By senhaInput = By.cssSelector("input[autocomplete='current-password']");
+    private final By botaoEntrar = By.cssSelector("button[data-testid='enviar-acesso']");
 
     public LoginPage(WebDriver driver) {
         super(driver);
@@ -23,5 +24,9 @@ public class LoginPage extends BasePage {
         wait.until(ExpectedConditions.visibilityOfElementLocated(senhaInput)).sendKeys(senha);
 
         return this;
+    }
+
+    public void entrar() {
+        wait.until(ExpectedConditions.elementToBeClickable(botaoEntrar)).click();
     }
 }
