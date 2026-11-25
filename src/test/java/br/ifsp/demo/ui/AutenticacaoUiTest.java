@@ -114,4 +114,15 @@ public class AutenticacaoUiTest extends UiTestBase {
         assertThat(entrada.caminhoAtual()).isEqualTo("/entrar");
     }
 
+    @Test
+    @DisplayName("Deve deixar o usuário logado na agenda logo após criar a conta")
+    void deveEntrarNaAgendaAposCriarConta() {
+
+        UsuarioUiHelper.cadastrarNaUiMantendoLogado(driver);
+
+        final MinhaAgendaPage agenda = new MinhaAgendaPage(driver);
+
+        assertThat(agenda.caminhoAtual()).isEqualTo("/");
+    }
+
 }
