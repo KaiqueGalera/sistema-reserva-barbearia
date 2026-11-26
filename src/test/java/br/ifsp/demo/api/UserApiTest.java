@@ -78,4 +78,14 @@ class UserApiTest extends ApiTestBase {
                 .statusCode(400);
     }
 
+    @Test
+    @DisplayName("Deve rejeitar cadastro com campos vazios")
+    void deveRejeitarCadastroComCamposVazios() {
+        requisicao()
+                .body(new RegisterUserRequest("", "", "", ""))
+                .when()
+                .post("/api/v1/register")
+                .then()
+                .statusCode(400);
+    }
 }
