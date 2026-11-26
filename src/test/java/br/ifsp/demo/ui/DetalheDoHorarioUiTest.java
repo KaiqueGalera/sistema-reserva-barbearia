@@ -3,6 +3,8 @@ package br.ifsp.demo.ui;
 import br.ifsp.demo.ui.pages.*;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -98,5 +100,17 @@ public class DetalheDoHorarioUiTest {
 
         assertThat(detalhePage.obterMensagemAviso())
                 .isEqualTo("Horário alterado.");
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5})
+    @DisplayName("Deve registrar avaliação do atendimento")
+    public void deveRegistrarAvaliacaoDoAtendimento(int nota) {
+        DetalheDoHorarioPage detalhePage = new DetalheDoHorarioPage(driver);
+
+        detalhePage.avaliar(nota);
+
+        assertThat(detalhePage.obterMensagemAviso())
+                .isEqualTo("Avaliação registrada: nota " + nota + ".");
     }
 }
