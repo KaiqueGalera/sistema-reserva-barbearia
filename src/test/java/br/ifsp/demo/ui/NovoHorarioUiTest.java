@@ -28,7 +28,24 @@ public class NovoHorarioUiTest extends UiTestBase {
                 .preencherTelefone("123")
                 .submeterAgendamentoComErro();
 
-        assertThat(novoHorario.obterMensagemErro()).isEqualTo("Informe o telefone com DDD, com 10 ou 11 digitos.");
+        assertThat(novoHorario.obterMensagemErro()).isEqualTo("Informe o telefone com DDD, com 10 ou 11 dígitos.");
         assertThat(agenda.caminhoAtual()).isEqualTo("/novo");
+    }
+
+    @Test
+    @DisplayName("Deve manter o botão de marcar desabilitado enquanto nenhum horário for escolhido")
+    void deveManterOBotaoDeMarcarDesabilitadoEnquantoNenhumHorarioForEscolhido() {
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, UsuarioUiHelper.criarContaPelaApi());
+        agenda.clicarMarcarHorarioNoMenu();
+        agenda.aguardarCaminho("/novo");
+
+        final NovoHorarioPage novoHorario = new NovoHorarioPage(driver);
+
+        assertThat(novoHorario.botaoDeEnvioEstaHabilitado()).isFalse();
+        assertThat(novoHorario.obterResumo()).isEqualTo("Nenhum horário escolhido.");
+
+        novoHorario.selecionarDia(LocalDate.now().plusDays(1)).selecionarHorarioDisponivel();
+
+        assertThat(novoHorario.botaoDeEnvioEstaHabilitado()).isTrue();
     }
 }

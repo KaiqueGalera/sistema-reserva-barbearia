@@ -12,6 +12,7 @@ public class NovoHorarioPage extends BasePage {
     private final By telefoneInput = By.cssSelector("input[autocomplete='tel-national']");
     private final By botaoEnviar = By.cssSelector("button[data-testid='enviar-agendamento']");
     private final By mensagemErro = By.cssSelector("p.erro[role='alert']");
+    private final By resumo = By.cssSelector(".fecho__resumo");
 
     public NovoHorarioPage(WebDriver driver) {
         super(driver);
@@ -80,6 +81,14 @@ public class NovoHorarioPage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(botaoEnviar)).click();
 
         return this;
+    }
+
+    public boolean botaoDeEnvioEstaHabilitado() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(botaoEnviar)).isEnabled();
+    }
+
+    public String obterResumo() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(resumo)).getText();
     }
 
     public String obterMensagemErro() {
