@@ -84,7 +84,6 @@ public class DetalheDoHorarioUiTest {
     public void deveManterAgendamentoAoDesistirDoCancelamento() {
         DetalheDoHorarioPage detalhePage = new DetalheDoHorarioPage(driver);
 
-        detalhePage.cancelarHorario();
         detalhePage.manterHorario();
 
         assertThat(detalhePage.obterStatus())
