@@ -1,10 +1,10 @@
-package br.ifsp.demo.pageObjects;
+package br.ifsp.demo.ui.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class DetalheDoHorarioPage extends BasePage {
+public class DetalheDoHorarioPage extends PaginaBase {
     private final By mensagemAviso = By.cssSelector("p.aviso[role='status']");
     private final By mensagemErro = By.cssSelector("p.aviso[role='alert']");
     private final By status = By.cssSelector("span.linha__status");
@@ -14,6 +14,8 @@ public class DetalheDoHorarioPage extends BasePage {
     private final By btnAbrirCancelamento = By.xpath("//button[text()='Cancelar este horário']");
     private final By btnConfirmarCancelamento = By.xpath("//button[text()='Cancelar horário']");
     private final By btnConfirmarPresenca = By.xpath("//button[text()='Confirmar presença']");
+
+    private final By voltar = By.cssSelector("a.voltar");
 
     public DetalheDoHorarioPage(WebDriver driver) {
         super(driver);
@@ -61,5 +63,11 @@ public class DetalheDoHorarioPage extends BasePage {
         wait.until(ExpectedConditions.elementToBeClickable(btnConfirmarPresenca)).click();
 
         return this;
+    }
+
+    public MinhaAgendaPage voltarParaAgenda() {
+        wait.until(ExpectedConditions.elementToBeClickable(voltar)).click();
+
+        return new MinhaAgendaPage(driver);
     }
 }

@@ -1,7 +1,8 @@
 package br.ifsp.demo.ui;
 
-import br.ifsp.demo.pageObjects.DetalheDoHorarioPage;
-import br.ifsp.demo.pageObjects.NovoHorarioPage;
+import br.ifsp.demo.ui.pages.DetalheDoHorarioPage;
+import br.ifsp.demo.ui.pages.LoginPage;
+import br.ifsp.demo.ui.pages.NovoHorarioPage;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -20,7 +21,10 @@ public class AgendamentoUiTest {
     public void setUp() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
+
         faker = Faker.instance();
+
+        navegarParaMarcarHorario();
     }
 
     @AfterEach
@@ -28,24 +32,56 @@ public class AgendamentoUiTest {
         if (driver != null) driver.quit();
     }
 
+
+    private void navegarParaMarcarHorario() {
+        driver.get(BASE_URL + "/entrar");
+
+        LoginPage loginPage = new LoginPage(driver);
+
+        loginPage
+                .preencherEmail("usuario.teste@gmail.com")
+                .preencherSenha("cdd123fjk")
+                .entrar();
+    }
+
     @Test
     @DisplayName("Deve criar agendamento com dados do Faker e navegar para a tela de detalhes")
     public void deveCriarAgendamentoComDadosDoFakerENavegarParaATelaDeDetalhes() {
-        driver.get(BASE_URL + "/novo");
-
-        String nome = faker.name().fullName();
-        String telefone = faker.phoneNumber().cellPhone();
+        String nome = faker.name().firstName() + " " + faker.name().lastName();
+        String telefone = faker.number().digits(11);
 
         NovoHorarioPage novoPage = new NovoHorarioPage(driver);
 
         DetalheDoHorarioPage detalhePage = novoPage
-                .selecionarServico("Corte")
-                .selecionarBarbeiro("Barbeiro")
+                .selecionarServico("Barba")
+                .selecionarBarbeiro("Neide")
+                .selecionarDiaDisponivel()
                 .selecionarHorarioDisponivel()
                 .preencherNome(nome)
                 .preencherTelefone(telefone)
                 .submeterAgendamentoComSucesso();
 
         assertThat(detalhePage.obterMensagemAviso()).isEqualTo("Horário marcado.");
+    }
+
+    @Test
+    @DisplayName("Deve exibir erro de validação ao informar telefone com dígitos insuficientes")
+    public void deveExibirErroDeValidacaoAoInformarTelefoneComDigitosInsuficientes() {
+        String nome = faker.name().firstName() + " " + faker.name().lastName();
+        String telefone = faker.number().digits(9);
+
+        NovoHorarioPage novoPage = new NovoHorarioPage(driver);
+
+        novoPage
+                .selecionarServico("Barba")
+                .selecionarBarbeiro("Neide")
+                .selecionarDiaDisponivel()
+                .selecionarHorarioDisponivel()
+                .preencherNome(nome)
+                .preencherTelefone(telefone)
+                .submeterAgendamentoComSucesso();
+
+        assertThat(novoPage.obterMensagemErro())
+                .isEqualTo("Informe o telefone com DDD, com 10 ou 11 dígitos.");
     }
 }

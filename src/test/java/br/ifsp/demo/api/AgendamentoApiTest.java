@@ -709,6 +709,31 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", equalTo("Apenas atendimentos realizados podem ser avaliados"));
     }
 
+
+    @Test
+    @DisplayName("Deve retornar 401 ao buscar um agendamento sem token")
+    void deveRetornar401AoBuscarUmAgendamentoSemToken() {
+
+        requisicao()
+                .when()
+                .get("/api/v1/agendamentos/{id}", UUID.randomUUID())
+                .then()
+                .statusCode(401);
+    }
+
+
+    @Test
+    @DisplayName("Deve retornar 401 ao cancelar um agendamento sem token")
+    void deveRetornar401AoCancelarUmAgendamentoSemToken() {
+
+        requisicao()
+                .when()
+                .post("/api/v1/agendamentos/{id}/cancelamento", UUID.randomUUID())
+                .then()
+                .statusCode(401);
+    }
+
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)
