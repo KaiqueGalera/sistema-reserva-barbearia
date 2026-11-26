@@ -5,6 +5,8 @@ import br.ifsp.demo.ui.pages.LoginPage;
 import br.ifsp.demo.ui.pages.NovoHorarioPage;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -44,11 +46,12 @@ public class AgendamentoUiTest {
                 .entrar();
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(ints = {10, 11})
     @DisplayName("Deve criar agendamento com dados do Faker e navegar para a tela de detalhes")
-    public void deveCriarAgendamentoComDadosDoFakerENavegarParaATelaDeDetalhes() {
+    public void deveCriarAgendamentoComDadosDoFakerENavegarParaATelaDeDetalhes(int qtdDigitos) {
         String nome = faker.name().firstName() + " " + faker.name().lastName();
-        String telefone = faker.number().digits(11);
+        String telefone = faker.number().digits(qtdDigitos);
 
         NovoHorarioPage novoPage = new NovoHorarioPage(driver);
 
@@ -64,11 +67,12 @@ public class AgendamentoUiTest {
         assertThat(detalhePage.obterMensagemAviso()).isEqualTo("Horário marcado.");
     }
 
-    @Test
-    @DisplayName("Deve exibir erro de validação ao informar telefone com dígitos insuficientes")
-    public void deveExibirErroDeValidacaoAoInformarTelefoneComDigitosInsuficientes() {
+    @ParameterizedTest
+    @ValueSource(ints = {8, 9, 12, 13})
+    @DisplayName("Deve exibir erro de validação ao informar telefone com uma quantidade de digitos incorreta")
+    public void deveExibirErroDeValidacaoAoInformarTelefoneComUmaQuantidadeDeDigitosIncorreta(int qtdDigitos) {
         String nome = faker.name().firstName() + " " + faker.name().lastName();
-        String telefone = faker.number().digits(9);
+        String telefone = faker.number().digits(qtdDigitos);
 
         NovoHorarioPage novoPage = new NovoHorarioPage(driver);
 
