@@ -16,11 +16,21 @@ public class NovoHorarioPage extends BasePage {
     }
 
     public NovoHorarioPage selecionarServico(String nomeServico) {
-        By locator = By.cssSelector("[data-testid='servico-" + nomeServico + "'] input[type='checkbox']");
-        WebElement checkbox = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        By checkbox = By.cssSelector(
+                "[data-testid='servico-" + nomeServico + "'] input[type='checkbox']"
+        );
 
-        if (!checkbox.isSelected()) {
-            checkbox.click();
+        By opcaoServico = By.cssSelector(
+                "label[data-testid='servico-" + nomeServico + "']"
+        );
+
+        WebElement elementoCheckbox = wait.until(
+                ExpectedConditions.presenceOfElementLocated(checkbox)
+        );
+
+        if (!elementoCheckbox.isSelected()) {
+            wait.until(ExpectedConditions.elementToBeClickable(opcaoServico))
+                    .click();
         }
 
         return this;
