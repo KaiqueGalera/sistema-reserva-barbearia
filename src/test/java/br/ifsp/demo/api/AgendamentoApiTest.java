@@ -709,6 +709,55 @@ class AgendamentoApiTest extends ApiTestBase {
                 .body("message", equalTo("Apenas atendimentos realizados podem ser avaliados"));
     }
 
+
+    @Test
+    @DisplayName("Deve retornar 401 ao buscar um agendamento sem token")
+    void deveRetornar401AoBuscarUmAgendamentoSemToken() {
+
+        requisicao()
+                .when()
+                .get("/api/v1/agendamentos/{id}", UUID.randomUUID())
+                .then()
+                .statusCode(401);
+    }
+
+
+    @Test
+    @DisplayName("Deve retornar 401 ao cancelar um agendamento sem token")
+    void deveRetornar401AoCancelarUmAgendamentoSemToken() {
+
+        requisicao()
+                .when()
+                .post("/api/v1/agendamentos/{id}/cancelamento", UUID.randomUUID())
+                .then()
+                .statusCode(401);
+    }
+
+
+    @Test
+    @DisplayName("Deve retornar 409 ao reagendar para um horário já ocupado pelo barbeiro")
+    void deveRetornar409AoReagendarParaUmHorarioJaOcupadoPeloBarbeiro() {
+
+        final String senha = "senha123";
+        final User usuario = registrarUsuario(senha);
+
+        final String token = autenticar(usuario.getUsername(), senha);
+        final UUID barbeiroId = UUID.randomUUID();
+
+        agendar(token, umAgendamento().comBarbeiro(barbeiroId).comInicio(amanhaAs(10)).construir());
+        final String idDaTarde = agendar(token, umAgendamento().comBarbeiro(barbeiroId).comInicio(amanhaAs(14)).construir());
+
+        requisicaoAutenticada(token)
+                .body(Map.of("novoInicio", formatar(amanhaAs(10))))
+                .when()
+                .post("/api/v1/agendamentos/{id}/reagendamento", idDaTarde)
+                .then()
+                .statusCode(409)
+                .body("status", equalTo("CONFLICT"))
+                .body("message", equalTo("Horário indisponível para o barbeiro"));
+    }
+
+
     private String agendar(String token, Map<String, Object> agendamento) {
         return requisicaoAutenticada(token)
                 .body(agendamento)

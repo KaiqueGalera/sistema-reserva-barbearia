@@ -16,11 +16,11 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 public abstract class PaginaBase {
 
     protected final WebDriver driver;
-    protected final WebDriverWait espera;
+    protected final WebDriverWait wait;
 
     protected PaginaBase(WebDriver driver) {
         this.driver = driver;
-        this.espera = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
 
@@ -29,7 +29,7 @@ public abstract class PaginaBase {
     }
 
     protected WebElement visivel(By localizador) {
-        return espera.until(visibilityOfElementLocated(localizador));
+        return wait.until(visibilityOfElementLocated(localizador));
     }
 
 
@@ -41,7 +41,7 @@ public abstract class PaginaBase {
 
 
     protected void clicar(By localizador) {
-        espera.until(elementToBeClickable(localizador)).click();
+        wait.until(elementToBeClickable(localizador)).click();
     }
 
 
@@ -51,11 +51,11 @@ public abstract class PaginaBase {
 
 
     public void aguardarCaminho(String caminho) {
-        espera.until(urlToBe(URL_FRONT + caminho));
+        wait.until(urlToBe(URL_FRONT + caminho));
     }
 
     public void aguardarCaminhoIniciadoPor(String prefixo) {
-        espera.until(urlContains(URL_FRONT + prefixo));
+        wait.until(urlContains(URL_FRONT + prefixo));
     }
 
     protected void garantirCaminho(String esperado) {
