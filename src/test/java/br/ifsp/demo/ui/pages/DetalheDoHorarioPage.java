@@ -1,10 +1,10 @@
-package br.ifsp.demo.pageObjects;
+package br.ifsp.demo.ui.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class DetalheDoHorarioPage extends BasePage {
+public class DetalheDoHorarioPage extends PaginaBase {
     private final By mensagemAviso = By.cssSelector("p.aviso[role='status']");
     private final By mensagemErro = By.cssSelector("p.aviso[role='alert']");
     private final By status = By.cssSelector("span.linha__status");

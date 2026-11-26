@@ -1,10 +1,10 @@
-package br.ifsp.demo.pageObjects;
+package br.ifsp.demo.ui.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class LoginPage extends BasePage {
+public class LoginPage extends PaginaBase {
     private final By emailInput = By.cssSelector("input[autocomplete='email']");
     private final By senhaInput = By.cssSelector("input[autocomplete='current-password']");
     private final By botaoEntrar = By.cssSelector("button[data-testid='enviar-acesso']");
