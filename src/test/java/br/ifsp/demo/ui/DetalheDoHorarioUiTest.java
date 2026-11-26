@@ -76,4 +76,16 @@ public class DetalheDoHorarioUiTest {
         assertThat(detalhePage.obterMensagemAviso())
                 .isEqualTo("Horário cancelado.");
     }
+
+    @Test
+    @DisplayName("Deve manter agendamento ao desistir do cancelamento")
+    public void deveManterAgendamentoAoDesistirDoCancelamento() {
+        DetalheDoHorarioPage detalhePage = new DetalheDoHorarioPage(driver);
+
+        detalhePage.cancelarHorario();
+        detalhePage.manterHorario();
+
+        assertThat(detalhePage.obterStatus())
+                .isNotEqualTo("Horário cancelado.");
+    }
 }
