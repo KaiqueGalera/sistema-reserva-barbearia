@@ -12,6 +12,7 @@ public class NovoHorarioPage extends PaginaBase {
     private final By telefoneInput = By.cssSelector("input[autocomplete='tel-national']");
     private final By botaoEnviar = By.cssSelector("button[data-testid='enviar-agendamento']");
     private final By mensagemErro = By.cssSelector("p.erro[role='alert']");
+    private final By resumoHorario = By.xpath("//span[text()='Nenhum horário escolhido.']");
 
     public NovoHorarioPage(WebDriver driver) {
         super(driver);
@@ -122,5 +123,9 @@ public class NovoHorarioPage extends PaginaBase {
 
     public String obterMensagemErro() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(mensagemErro)).getText();
+    }
+
+    public String obterResumoHorario() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(resumoHorario)).getText();
     }
 }
