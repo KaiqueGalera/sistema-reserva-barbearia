@@ -15,6 +15,8 @@ public class DetalheDoHorarioPage extends PaginaBase {
     private final By btnConfirmarCancelamento = By.xpath("//button[text()='Cancelar horário']");
     private final By btnConfirmarPresenca = By.xpath("//button[text()='Confirmar presença']");
 
+    private final By voltar = By.cssSelector("a.voltar");
+
     public DetalheDoHorarioPage(WebDriver driver) {
         super(driver);
     }
@@ -61,5 +63,11 @@ public class DetalheDoHorarioPage extends PaginaBase {
         wait.until(ExpectedConditions.elementToBeClickable(btnConfirmarPresenca)).click();
 
         return this;
+    }
+
+    public MinhaAgendaPage voltarParaAgenda() {
+        wait.until(ExpectedConditions.elementToBeClickable(voltar)).click();
+
+        return new MinhaAgendaPage(driver);
     }
 }
