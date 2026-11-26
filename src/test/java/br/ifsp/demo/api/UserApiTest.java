@@ -88,4 +88,15 @@ class UserApiTest extends ApiTestBase {
                 .then()
                 .statusCode(400);
     }
+
+    @Test
+    @DisplayName("Deve rejeitar cadastro com e-mail malformado")
+    void deveRejeitarCadastroComEmailMalformado() {
+        requisicao()
+                .body(new RegisterUserRequest("Ana", "Silva", "email-sem-arroba", "senha123"))
+                .when()
+                .post("/api/v1/register")
+                .then()
+                .statusCode(400);
+    }
 }
