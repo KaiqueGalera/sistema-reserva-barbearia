@@ -26,7 +26,7 @@ public class NovoHorarioUiTest extends UiTestBase {
         assertThat(novoHorario.botaoDeEnvioEstaHabilitado()).isFalse();
         assertThat(novoHorario.obterResumo()).isEqualTo("Nenhum horário escolhido.");
 
-        novoHorario.selecionarDia(LocalDate.now().plusDays(1)).selecionarHorarioDisponivel();
+        novoHorario.selecionarDiaDisponivel().selecionarHorarioDisponivel();
 
         assertThat(novoHorario.botaoDeEnvioEstaHabilitado()).isTrue();
     }
