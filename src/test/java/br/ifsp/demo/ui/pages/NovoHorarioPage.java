@@ -1,6 +1,7 @@
 package br.ifsp.demo.ui.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,7 +13,9 @@ public class NovoHorarioPage extends PaginaBase {
     private final By telefoneInput = By.cssSelector("input[autocomplete='tel-national']");
     private final By botaoEnviar = By.cssSelector("button[data-testid='enviar-agendamento']");
     private final By mensagemErro = By.cssSelector("p.erro[role='alert']");
-    private final By resumoHorario = By.xpath("//span[text()='Nenhum horário escolhido.']");
+    private final By titulo = By.cssSelector("form.novo h1");
+    private final By resumo = By.cssSelector(".fecho__resumo");
+    private final By avisoDeHorarios = By.cssSelector("fieldset.bloco p.nota");
 
     public NovoHorarioPage(WebDriver driver) {
         super(driver);
@@ -32,6 +35,27 @@ public class NovoHorarioPage extends PaginaBase {
         );
 
         if (!elementoCheckbox.isSelected()) {
+            wait.until(ExpectedConditions.elementToBeClickable(opcaoServico))
+                    .click();
+        }
+
+        return this;
+    }
+
+    public NovoHorarioPage desmarcarServico(String nomeServico) {
+        By checkbox = By.cssSelector(
+                "[data-testid='servico-" + nomeServico + "'] input[type='checkbox']"
+        );
+
+        By opcaoServico = By.cssSelector(
+                "label[data-testid='servico-" + nomeServico + "']"
+        );
+
+        WebElement elementoCheckbox = wait.until(
+                ExpectedConditions.presenceOfElementLocated(checkbox)
+        );
+
+        if (elementoCheckbox.isSelected()) {
             wait.until(ExpectedConditions.elementToBeClickable(opcaoServico))
                     .click();
         }
@@ -125,7 +149,28 @@ public class NovoHorarioPage extends PaginaBase {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(mensagemErro)).getText();
     }
 
-    public String obterResumoHorario() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(resumoHorario)).getText();
+    public String obterResumo() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(resumo)).getText();
+    }
+
+    public String obterTitulo() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(titulo)).getText();
+    }
+
+    public String obterAvisoDeHorarios() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(avisoDeHorarios)).getText();
+    }
+
+    public boolean botaoDeEnvioEstaHabilitado() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(botaoEnviar)).isEnabled();
+    }
+
+    public boolean botaoDeEnvioEstaVisivel() {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(botaoEnviar)).isDisplayed();
+    }
+
+    public boolean temRolagemHorizontal() {
+        return (Boolean) ((JavascriptExecutor) driver).executeScript(
+                "return document.documentElement.scrollWidth > document.documentElement.clientWidth;");
     }
 }
