@@ -55,8 +55,9 @@ public class AgendamentoUiTest {
         NovoHorarioPage novoPage = new NovoHorarioPage(driver);
 
         DetalheDoHorarioPage detalhePage = novoPage
-                .selecionarServico("Corte")
-                .selecionarBarbeiro("Barbeiro")
+                .selecionarServico("Barba")
+                .selecionarBarbeiro("Neide")
+                .selecionarDiaDisponivel()
                 .selecionarHorarioDisponivel()
                 .preencherNome(nome)
                 .preencherTelefone(telefone)
