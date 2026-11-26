@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.emptyOrNullString;
 
 class UserApiTest extends ApiTestBase {
 
@@ -47,5 +49,21 @@ class UserApiTest extends ApiTestBase {
                 .post("/api/v1/authenticate")
                 .then()
                 .statusCode(401);
+    }
+
+    @Test
+    @DisplayName("Deve autenticar usuário registrado e retornar token")
+    void deveAutenticarUsuarioERetornarToken() {
+        String senha = "senha123";
+        User usuario = registrarUsuario(senha);
+
+        requisicao()
+                .body(new AuthRequest(usuario.getUsername(), senha))
+                .when()
+                .post("/api/v1/authenticate")
+                .then()
+                .statusCode(200)
+                .body("token", notNullValue())
+                .body("token", not(emptyOrNullString()));
     }
 }
