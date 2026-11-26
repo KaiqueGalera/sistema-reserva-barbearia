@@ -88,7 +88,7 @@ public class EntradaPage extends PaginaBase{
     }
 
     public boolean campoDeNomeAusente() {
-        return espera.until(invisibilityOfElementLocated(NOME));
+        return wait.until(invisibilityOfElementLocated(NOME));
     }
 
     public EntradaPage alternarParaEntrar() {
