@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.time.LocalDate;
+
 public class NovoHorarioPage extends BasePage {
     private final By nomeInput = By.cssSelector("input[autocomplete='name']");
     private final By telefoneInput = By.cssSelector("input[autocomplete='tel-national']");
@@ -34,8 +36,16 @@ public class NovoHorarioPage extends BasePage {
         return this;
     }
 
+    public NovoHorarioPage selecionarDia(LocalDate data) {
+        By locator = By.cssSelector("[data-testid='dia-" + data + "']");
+
+        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+
+        return this;
+    }
+
     public NovoHorarioPage selecionarHorarioDisponivel() {
-        By botaoHorarioDisponivel = By.cssSelector(".seletor-horario button:not([disabled])");
+        By botaoHorarioDisponivel = By.cssSelector("button[data-testid^='horario-']:not([disabled])");
 
         wait.until(ExpectedConditions.elementToBeClickable(botaoHorarioDisponivel)).click();
 
