@@ -65,4 +65,15 @@ public class DetalheDoHorarioUiTest {
         assertThat(detalhePage.obterMensagemAviso())
                 .isEqualTo("Presença confirmada.");
     }
+
+    @Test
+    @DisplayName("Deve cancelar agendamento com sucesso")
+    public void deveCancelarAgendamentoComSucesso() {
+        DetalheDoHorarioPage detalhePage = new DetalheDoHorarioPage(driver);
+
+        detalhePage.cancelarHorario();
+
+        assertThat(detalhePage.obterMensagemAviso())
+                .isEqualTo("Horário cancelado.");
+    }
 }
