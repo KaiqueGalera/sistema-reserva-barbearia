@@ -73,6 +73,7 @@ public class DetalheDoHorarioPage extends PaginaBase {
     }
 
     public DetalheDoHorarioPage manterHorario() {
+        wait.until(ExpectedConditions.elementToBeClickable(btnAbrirCancelamento)).click();
         wait.until(ExpectedConditions.elementToBeClickable(btnManterHorario))
                 .click();
 
