@@ -5,6 +5,7 @@ import br.ifsp.demo.ui.pages.MinhaAgendaPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.Dimension;
 
 import java.time.LocalDate;
 
@@ -61,5 +62,21 @@ public class NovoHorarioUiTest extends UiTestBase {
         assertThat(novoHorario.obterAvisoDeHorarios())
                 .isEqualTo("Escolha ao menos um serviço para ver os horários livres.");
         assertThat(novoHorario.botaoDeEnvioEstaHabilitado()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Deve manter a tela de novo horário utilizável em tela de celular")
+    void deveManterATelaDeNovoHorarioUtilizavelEmTelaDeCelular() {
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, UsuarioUiHelper.criarContaPelaApi());
+        agenda.clicarMarcarHorarioNoMenu();
+        agenda.aguardarCaminho("/novo");
+
+        driver.manage().window().setSize(new Dimension(375, 812));
+
+        final NovoHorarioPage novoHorario = new NovoHorarioPage(driver);
+
+        assertThat(novoHorario.obterTitulo()).isEqualTo("Marcar horário");
+        assertThat(novoHorario.botaoDeEnvioEstaVisivel()).isTrue();
+        assertThat(novoHorario.temRolagemHorizontal()).isFalse();
     }
 }

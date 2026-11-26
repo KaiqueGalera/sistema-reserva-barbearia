@@ -1,6 +1,7 @@
 package br.ifsp.demo.pageObjects;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,6 +13,7 @@ public class NovoHorarioPage extends BasePage {
     private final By telefoneInput = By.cssSelector("input[autocomplete='tel-national']");
     private final By botaoEnviar = By.cssSelector("button[data-testid='enviar-agendamento']");
     private final By mensagemErro = By.cssSelector("p.erro[role='alert']");
+    private final By titulo = By.cssSelector("form.novo h1");
     private final By resumo = By.cssSelector(".fecho__resumo");
     private final By avisoDeHorarios = By.cssSelector("fieldset.bloco p.nota");
 
@@ -103,6 +105,19 @@ public class NovoHorarioPage extends BasePage {
 
     public boolean botaoDeEnvioEstaHabilitado() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(botaoEnviar)).isEnabled();
+    }
+
+    public String obterTitulo() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(titulo)).getText();
+    }
+
+    public boolean botaoDeEnvioEstaVisivel() {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(botaoEnviar)).isDisplayed();
+    }
+
+    public boolean temRolagemHorizontal() {
+        return (Boolean) ((JavascriptExecutor) driver).executeScript(
+                "return document.documentElement.scrollWidth > document.documentElement.clientWidth;");
     }
 
     public String obterAvisoDeHorarios() {
