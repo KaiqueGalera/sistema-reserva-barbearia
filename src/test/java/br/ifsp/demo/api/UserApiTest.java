@@ -66,4 +66,16 @@ class UserApiTest extends ApiTestBase {
                 .body("token", notNullValue())
                 .body("token", not(emptyOrNullString()));
     }
+
+    @Test
+    @DisplayName("Deve rejeitar cadastro com campos obrigatórios ausentes")
+    void deveRejeitarCadastroComCamposAusentes() {
+        requisicao()
+                .body(new RegisterUserRequest(null, null, null, null))
+                .when()
+                .post("/api/v1/register")
+                .then()
+                .statusCode(400);
+    }
+
 }
