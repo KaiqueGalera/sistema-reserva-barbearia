@@ -1,6 +1,7 @@
 package br.ifsp.demo.ui;
 
 import br.ifsp.demo.pageObjects.DetalheDoHorarioPage;
+import br.ifsp.demo.pageObjects.LoginPage;
 import br.ifsp.demo.pageObjects.NovoHorarioPage;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.*;
@@ -20,12 +21,27 @@ public class AgendamentoUiTest {
     public void setUp() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
+
         faker = Faker.instance();
+
+        navegarParaMarcarHorario();
     }
 
     @AfterEach
     public void tearDown() {
         if (driver != null) driver.quit();
+    }
+
+
+    private void navegarParaMarcarHorario() {
+        driver.get(BASE_URL + "/entrar");
+
+        LoginPage loginPage = new LoginPage(driver);
+
+        loginPage
+                .preencherEmail("usuario.teste@gmail.com")
+                .preencherSenha("cdd123fjk")
+                .entrar();
     }
 
     @Test
