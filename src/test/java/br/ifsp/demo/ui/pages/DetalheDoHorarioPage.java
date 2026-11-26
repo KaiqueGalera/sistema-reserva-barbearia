@@ -6,7 +6,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class DetalheDoHorarioPage extends PaginaBase {
     private final By mensagemAviso = By.cssSelector("p.aviso[role='status']");
-    private final By mensagemErro = By.cssSelector("p.aviso[role='alert']");
+    private final By mensagemErro = By.cssSelector("p.erro[role='alert']");
     private final By status = By.cssSelector("span.linha__status");
 
     private final By btnAbrirReagendamento = By.xpath("//button[text()='Escolher outro horário']");
@@ -45,9 +45,9 @@ public class DetalheDoHorarioPage extends PaginaBase {
     public DetalheDoHorarioPage reagendarHorario() {
         wait.until(ExpectedConditions.elementToBeClickable(btnAbrirReagendamento)).click();
 
-        By botaoHorarioDisponivel = By.cssSelector(".seletor-horario button:not([disabled])");
+        By primeiroHorarioDisponivel = By.cssSelector(".seletor__horarios button:not([disabled])");
 
-        wait.until(ExpectedConditions.elementToBeClickable(botaoHorarioDisponivel)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(primeiroHorarioDisponivel)).click();
         wait.until(ExpectedConditions.elementToBeClickable(btnConfirmarReagendamento)).click();
 
         return this;
