@@ -45,9 +45,12 @@ public class NovoHorarioPage extends BasePage {
     }
 
     public NovoHorarioPage selecionarHorarioDisponivel() {
-        By botaoHorarioDisponivel = By.cssSelector(".seletor-horario button:not([disabled])");
+        By primeiroHorarioDisponivel = By.cssSelector(
+                ".seletor__horarios button:not([disabled])"
+        );
 
-        wait.until(ExpectedConditions.elementToBeClickable(botaoHorarioDisponivel)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(primeiroHorarioDisponivel))
+                .click();
 
         return this;
     }
