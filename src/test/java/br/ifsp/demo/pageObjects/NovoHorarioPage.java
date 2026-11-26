@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.time.LocalDate;
+
 public class NovoHorarioPage extends BasePage {
     private final By nomeInput = By.cssSelector("input[autocomplete='name']");
     private final By telefoneInput = By.cssSelector("input[autocomplete='tel-national']");
@@ -37,9 +39,42 @@ public class NovoHorarioPage extends BasePage {
     }
 
     public NovoHorarioPage selecionarBarbeiro(String nomeBarbeiro) {
-        By locator = By.cssSelector("[data-testid='barbeiro-" + nomeBarbeiro + "'] input[type = 'radio']");
+        By radio = By.cssSelector(
+                "[data-testid='barbeiro-" + nomeBarbeiro + "'] input[type='radio']"
+        );
 
-        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
+        By opcaoBarbeiro = By.cssSelector(
+                "label[data-testid='barbeiro-" + nomeBarbeiro + "']"
+        );
+
+        WebElement elementoRadio = wait.until(
+                ExpectedConditions.presenceOfElementLocated(radio)
+        );
+
+        if (!elementoRadio.isSelected()) {
+            wait.until(ExpectedConditions.elementToBeClickable(opcaoBarbeiro))
+                    .click();
+        }
+
+        return this;
+    }
+
+    public NovoHorarioPage selecionarDiaDisponivel() {
+        LocalDate amanha = LocalDate.now().plusDays(1);
+        String diaSelecionado = "dia-" + amanha.getYear() + "-" + amanha.getMonthValue() + "-" + amanha.getDayOfMonth();
+
+        By radio = By.cssSelector("[data-testid='" + diaSelecionado + "'] input[type='radio']");
+
+        By opcaoDia = By.cssSelector("label[data-testid='" + diaSelecionado + "']");
+
+        WebElement elementoRadio = wait.until(
+                ExpectedConditions.presenceOfElementLocated(radio)
+        );
+
+        if (!elementoRadio.isSelected()) {
+            wait.until(ExpectedConditions.elementToBeClickable(opcaoDia))
+                    .click();
+        }
 
         return this;
     }
