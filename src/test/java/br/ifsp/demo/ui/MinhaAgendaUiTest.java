@@ -1,6 +1,6 @@
 package br.ifsp.demo.ui;
 
-import br.ifsp.demo.ui.pages.DetalhesDoHorarioPage;
+import br.ifsp.demo.ui.pages.DetalheDoHorarioPage;
 import br.ifsp.demo.ui.pages.MinhaAgendaPage;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
@@ -112,9 +112,9 @@ public class MinhaAgendaUiTest extends UiTestBase {
         final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, credenciais);
         agenda.abrirProximoHorario();
 
-        final DetalhesDoHorarioPage detalhe = new DetalhesDoHorarioPage(driver);
-        detalhe.solicitarCancelamento().confirmarCancelamento();
-        assertThat(detalhe.mensagemDeAviso()).contains("Horário cancelado");
+        final DetalheDoHorarioPage detalhe = new DetalheDoHorarioPage(driver);
+        detalhe.cancelarHorario();
+        assertThat(detalhe.obterMensagemAviso()).contains("Horário cancelado");
 
         final MinhaAgendaPage agendaAtualizada = detalhe.voltarParaAgenda();
 
