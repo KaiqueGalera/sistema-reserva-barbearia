@@ -52,4 +52,20 @@ class AgendaDoBarbeiroApiTest extends ApiTestBase {
                 .then()
                 .statusCode(401);
     }
+
+    @Test
+    @DisplayName("Deve rejeitar consulta de disponibilidade para data passada")
+    void deveRejeitarConsultaDeDisponibilidadeParaDataPassada() {
+        String senha = "senha123";
+        User usuario = registrarUsuario(senha);
+        String token = autenticar(usuario.getUsername(), senha);
+
+        requisicaoAutenticada(token)
+                .queryParam("data", "2020-06-10")
+                .queryParam("servicos", "11111111-1111-1111-1111-111111111111")
+                .when()
+                .get("/api/v1/barbeiros/{barbeiroId}/horarios-disponiveis", UUID.randomUUID())
+                .then()
+                .statusCode(422);
+    }
 }
