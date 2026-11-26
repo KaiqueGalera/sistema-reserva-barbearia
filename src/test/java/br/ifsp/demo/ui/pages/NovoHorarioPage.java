@@ -1,4 +1,4 @@
-package br.ifsp.demo.pageObjects;
+package br.ifsp.demo.ui.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.time.LocalDate;
 
-public class NovoHorarioPage extends BasePage {
+public class NovoHorarioPage extends PaginaBase {
     private final By nomeInput = By.cssSelector("input[autocomplete='name']");
     private final By telefoneInput = By.cssSelector("input[autocomplete='tel-national']");
     private final By botaoEnviar = By.cssSelector("button[data-testid='enviar-agendamento']");

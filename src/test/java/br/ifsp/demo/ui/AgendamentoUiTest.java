@@ -1,8 +1,8 @@
 package br.ifsp.demo.ui;
 
-import br.ifsp.demo.pageObjects.DetalheDoHorarioPage;
-import br.ifsp.demo.pageObjects.LoginPage;
-import br.ifsp.demo.pageObjects.NovoHorarioPage;
+import br.ifsp.demo.ui.pages.DetalheDoHorarioPage;
+import br.ifsp.demo.ui.pages.LoginPage;
+import br.ifsp.demo.ui.pages.NovoHorarioPage;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
