@@ -6,6 +6,8 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 @Tag("UiTest")
 public class DetalheDoHorarioUiTest {
     private static final String BASE_URL = "http://localhost:5173";
@@ -51,5 +53,16 @@ public class DetalheDoHorarioUiTest {
                 .preencherNome(nome)
                 .preencherTelefone(telefone)
                 .submeterAgendamentoComSucesso();
+    }
+
+    @Test
+    @DisplayName("Deve confirmar presença no agendamento")
+    public void deveConfirmarPresencaNoAgendamento() {
+        DetalheDoHorarioPage detalhePage = new DetalheDoHorarioPage(driver);
+
+        detalhePage.confirmarPresenca();
+
+        assertThat(detalhePage.obterMensagemAviso())
+                .isEqualTo("Presença confirmada.");
     }
 }
