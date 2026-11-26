@@ -13,28 +13,46 @@ public class NovoHorarioPage extends BasePage {
     private final By botaoEnviar = By.cssSelector("button[data-testid='enviar-agendamento']");
     private final By mensagemErro = By.cssSelector("p.erro[role='alert']");
     private final By resumo = By.cssSelector(".fecho__resumo");
+    private final By avisoDeHorarios = By.cssSelector("fieldset.bloco p.nota");
 
     public NovoHorarioPage(WebDriver driver) {
         super(driver);
     }
 
     public NovoHorarioPage selecionarServico(String nomeServico) {
-        By locator = By.cssSelector("[data-testid='servico-" + nomeServico + "'] input[type='checkbox']");
-        WebElement checkbox = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        if (!servicoEstaMarcado(nomeServico)) {
+            clicarNoServico(nomeServico);
+        }
 
-        if (!checkbox.isSelected()) {
-            checkbox.click();
+        return this;
+    }
+
+    public NovoHorarioPage desmarcarServico(String nomeServico) {
+        if (servicoEstaMarcado(nomeServico)) {
+            clicarNoServico(nomeServico);
         }
 
         return this;
     }
 
     public NovoHorarioPage selecionarBarbeiro(String nomeBarbeiro) {
-        By locator = By.cssSelector("[data-testid='barbeiro-" + nomeBarbeiro + "'] input[type = 'radio']");
+        By locator = By.cssSelector("[data-testid='barbeiro-" + nomeBarbeiro + "']");
 
         wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
 
         return this;
+    }
+
+    private boolean servicoEstaMarcado(String nomeServico) {
+        By checkbox = By.cssSelector("[data-testid='servico-" + nomeServico + "'] input[type='checkbox']");
+
+        return wait.until(ExpectedConditions.presenceOfElementLocated(checkbox)).isSelected();
+    }
+
+    private void clicarNoServico(String nomeServico) {
+        By opcao = By.cssSelector("[data-testid='servico-" + nomeServico + "']");
+
+        wait.until(ExpectedConditions.elementToBeClickable(opcao)).click();
     }
 
     public NovoHorarioPage selecionarDia(LocalDate data) {
@@ -85,6 +103,10 @@ public class NovoHorarioPage extends BasePage {
 
     public boolean botaoDeEnvioEstaHabilitado() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(botaoEnviar)).isEnabled();
+    }
+
+    public String obterAvisoDeHorarios() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(avisoDeHorarios)).getText();
     }
 
     public String obterResumo() {

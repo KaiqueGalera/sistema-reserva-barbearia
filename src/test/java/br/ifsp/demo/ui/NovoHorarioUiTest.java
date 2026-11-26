@@ -48,4 +48,18 @@ public class NovoHorarioUiTest extends UiTestBase {
 
         assertThat(novoHorario.botaoDeEnvioEstaHabilitado()).isTrue();
     }
+
+    @Test
+    @DisplayName("Deve pedir ao menos um serviço quando nenhum estiver marcado")
+    void devePedirAoMenosUmServicoQuandoNenhumEstiverMarcado() {
+        final MinhaAgendaPage agenda = UsuarioUiHelper.entrarPelaUi(driver, UsuarioUiHelper.criarContaPelaApi());
+        agenda.clicarMarcarHorarioNoMenu();
+        agenda.aguardarCaminho("/novo");
+
+        final NovoHorarioPage novoHorario = new NovoHorarioPage(driver).desmarcarServico("Corte");
+
+        assertThat(novoHorario.obterAvisoDeHorarios())
+                .isEqualTo("Escolha ao menos um serviço para ver os horários livres.");
+        assertThat(novoHorario.botaoDeEnvioEstaHabilitado()).isFalse();
+    }
 }
