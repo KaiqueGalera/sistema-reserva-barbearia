@@ -47,10 +47,8 @@ public class AgendamentoUiTest {
     @Test
     @DisplayName("Deve criar agendamento com dados do Faker e navegar para a tela de detalhes")
     public void deveCriarAgendamentoComDadosDoFakerENavegarParaATelaDeDetalhes() {
-        driver.get(BASE_URL + "/novo");
-
-        String nome = faker.name().fullName();
-        String telefone = faker.phoneNumber().cellPhone();
+        String nome = faker.name().firstName() + " " + faker.name().lastName();
+        String telefone = faker.number().digits(11);
 
         NovoHorarioPage novoPage = new NovoHorarioPage(driver);
 
