@@ -88,4 +88,20 @@ public class AgendamentoUiTest {
         assertThat(novoPage.obterMensagemErro())
                 .isEqualTo("Informe o telefone com DDD, com 10 ou 11 dígitos.");
     }
+
+    @Test
+    @DisplayName("Deve desmarcar horário ao alterar o serviço selecionado")
+    public void deveDesmarcarHorarioAoAlterarServicoSelecionado() {
+        NovoHorarioPage novoPage = new NovoHorarioPage(driver);
+
+        novoPage
+                .selecionarServico("Barba")
+                .selecionarBarbeiro("Neide")
+                .selecionarDiaDisponivel()
+                .selecionarHorarioDisponivel()
+                .selecionarServico("Sobrancelha");
+
+        assertThat(novoPage.obterResumo())
+                .isEqualTo("Nenhum horário escolhido.");
+    }
 }
