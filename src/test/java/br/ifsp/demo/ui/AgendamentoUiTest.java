@@ -104,4 +104,20 @@ public class AgendamentoUiTest {
         assertThat(novoPage.obterResumo())
                 .isEqualTo("Nenhum horário escolhido.");
     }
+
+    @Test
+    @DisplayName("Deve desmarcar horário ao alterar o barbeiro")
+    public void deveDesmarcarHorarioAoAlterarBarbeiro() {
+        NovoHorarioPage novoPage = new NovoHorarioPage(driver);
+
+        novoPage
+                .selecionarServico("Barba")
+                .selecionarBarbeiro("Neide")
+                .selecionarDiaDisponivel()
+                .selecionarHorarioDisponivel()
+                .selecionarBarbeiro("Tavares");
+
+        assertThat(novoPage.obterResumo())
+                .isEqualTo("Nenhum horário escolhido.");
+    }
 }
