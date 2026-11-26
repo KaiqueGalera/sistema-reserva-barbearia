@@ -63,4 +63,25 @@ public class AgendamentoUiTest {
 
         assertThat(detalhePage.obterMensagemAviso()).isEqualTo("Horário marcado.");
     }
+
+    @Test
+    @DisplayName("Deve exibir erro de validação ao informar telefone com dígitos insuficientes")
+    public void deveExibirErroDeValidacaoAoInformarTelefoneComDigitosInsuficientes() {
+        String nome = faker.name().firstName() + " " + faker.name().lastName();
+        String telefone = faker.number().digits(9);
+
+        NovoHorarioPage novoPage = new NovoHorarioPage(driver);
+
+        novoPage
+                .selecionarServico("Barba")
+                .selecionarBarbeiro("Neide")
+                .selecionarDiaDisponivel()
+                .selecionarHorarioDisponivel()
+                .preencherNome(nome)
+                .preencherTelefone(telefone)
+                .submeterAgendamentoComSucesso();
+
+        assertThat(novoPage.obterMensagemErro())
+                .isEqualTo("Informe o telefone com DDD, com 10 ou 11 dígitos.");
+    }
 }
