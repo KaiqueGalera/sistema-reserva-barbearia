@@ -88,4 +88,15 @@ public class DetalheDoHorarioUiTest {
         assertThat(detalhePage.obterStatus())
                 .isNotEqualTo("Horário cancelado.");
     }
+
+    @Test
+    @DisplayName("Deve reagendar horário com sucesso")
+    public void deveReagendarHorarioComSucesso() {
+        DetalheDoHorarioPage detalhePage = new DetalheDoHorarioPage(driver);
+
+        detalhePage.reagendarHorario();
+
+        assertThat(detalhePage.obterMensagemAviso())
+                .isEqualTo("Horário alterado.");
+    }
 }
